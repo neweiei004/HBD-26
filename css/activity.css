@@ -1,0 +1,482 @@
+body {
+  margin: 0;
+  padding: 0;
+  /* font-family: 'Mali', sans-serif; */
+  font-family: 'Quicksand', sans-serif; /* New default font */
+  /* background: linear-gradient(135deg, #ffe1f0, #f9b3dd); */
+  background-color: #FFD1DC; /* Light Pink Background */
+  min-height: 100vh;
+  display: block; /* Changed from flex */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  overflow-x: hidden;
+}
+
+/* Main Content Area (Shared Style) */
+.main-content-area {
+  background-color: #FFF8DC; /* Cream Background */
+  max-width: 1200px;
+  margin: 100px auto 40px; /* Adjust margin to account for fixed nav */
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Navigation Menu */
+.nav-menu {
+  position: fixed;
+  top: 20px;
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  z-index: 1000;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 10px; /* Reduced gap */
+  background: #FFF8DC; /* Cream Background */
+  padding: 8px 12px; /* Adjusted padding */
+  border-radius: 20px; /* More rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Simplified shadow */
+  /* backdrop-filter: blur(5px); */ /* Removed backdrop filter */
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border */
+}
+
+.nav-menu li {
+  margin: 0;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #A0522D; /* Brownish text color */
+  font-weight: 500; /* Normal weight */
+  font-size: 0.9rem; /* Slightly smaller font */
+  padding: 6px 12px; /* Adjusted padding */
+  border-radius: 15px; /* Rounded corners */
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-menu a:hover {
+  background: #FFEBCD; /* Lighter cream on hover */
+  color: #8B4513; /* Darker brown on hover */
+  transform: translateY(0); /* Remove hover transform */
+}
+
+.nav-menu a:active {
+  transform: translateY(0); /* Remove active transform */
+  background: #FFDAB9; /* Slightly darker cream when active */
+}
+
+.nav-menu a.active {
+  background: #FFB6C1; /* Light pink background for active */
+  color: #8B0000; /* Dark red/brown for active text */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow */
+  padding: 6px 12px;
+  border-radius: 15px;
+  transform: translateY(0);
+}
+
+.nav-menu a.active:hover {
+  background: #FFA07A; /* Lighter salmon pink on hover */
+  transform: translateY(0);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+}
+
+/* Activity Container - To be placed inside main-content-area */
+.activity-container {
+  /* width: 90%; */ /* Removed width, handled by main-content-area */
+  /* max-width: 1200px; */ /* Removed max-width */
+  /* margin: 100px auto 50px; */ /* Removed margin */
+  padding: 0; /* Remove padding, handled by main-content-area */
+  /* background: rgba(255, 255, 255, 0.9); */ /* Removed background */
+  /* border-radius: 20px; */ /* Removed border-radius */
+  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); */ /* Removed box-shadow */
+  /* backdrop-filter: blur(10px); */ /* Removed backdrop-filter */
+}
+
+.activity-title {
+  text-align: center;
+  /* color: #ec4899; */
+  color: #8B4513; /* Dark Brown color */
+  font-family: 'Pacifico', cursive; /* Decorative font */
+  font-size: 2.8rem; /* Adjusted size */
+  margin-bottom: 30px;
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); */ /* Removed text shadow */
+}
+
+/* Activity Grid */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.activity-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.activity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ec4899, #f472b6);
+}
+
+.activity-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #ec4899;
+}
+
+.activity-name {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.activity-description {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design - Adjust margins for main-content-area */
+@media (max-width: 1200px) {
+  .main-content-area {
+    margin-left: 20px;
+    margin-right: 20px;
+    width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content-area {
+    margin-top: 80px;
+    margin-bottom: 30px;
+    padding: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  /* Activity Container - No adjustments needed as it's inside main */
+  .activity-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .activity-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .activity-card {
+    padding: 15px;
+  }
+
+  .activity-icon {
+    font-size: 2rem;
+  }
+
+  .activity-name {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content-area {
+    margin-top: 70px;
+    margin-bottom: 20px;
+    padding: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 20px;
+  }
+  /* Activity Container - No adjustments needed */
+  .activity-title {
+    font-size: 1.8rem;
+  }
+
+  .activity-grid {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .activity-card {
+    padding: 12px;
+  }
+
+  .activity-icon {
+    font-size: 1.8rem;
+  }
+
+  .activity-name {
+    font-size: 1.2rem;
+  }
+
+  .activity-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* Popup Styles - Updated for Image Reference */
+
+/* Overlay: Semi-transparent background behind the popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1050; /* Ensures overlay is above content but below popup */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show Overlay: Make overlay visible */
+.popup-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Popup Container: Main wrapper for the daily check-in popup */
+.daily-checkin-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9); /* Center popup and initial scale */
+  background: #FDF5E6; /* Light beige background for main content */
+  border-radius: 15px; /* Overall rounding */
+  width: 90%;
+  max-width: 550px; /* Slightly wider */
+  z-index: 1060; /* Ensures popup is above overlay */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid #EAE0D1; /* Light border */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
+  padding: 0; /* Remove padding, handled by inner elements */
+  overflow: hidden; /* Ensure header fits */
+}
+
+/* Show Popup: Make popup visible and scale to full size */
+.daily-checkin-popup.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Popup Header: Yellowish top section */
+.popup-header {
+  background: #FFD966; /* Yellowish-orange header */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #E8C354; /* Darker yellow border */
+  border-radius: 15px 15px 0 0; /* Round top corners */
+}
+
+/* Popup Title: Text within the header */
+.popup-title {
+  font-family: 'Quicksand', sans-serif; /* Clean sans-serif */
+  color: #6B4F41; /* Dark brown text */
+  font-size: 1.4rem; /* Adjust size */
+  font-weight: 700; /* Bold */
+  margin: 0;
+  text-shadow: none; /* Remove previous shadow */
+}
+
+/* Popup Close Button: The 'X' button */
+.popup-close {
+  font-family: 'Arial', sans-serif; /* Use a standard font for X */
+  font-size: 1.5rem;
+  color: white; /* White X */
+  background: #6B4F41; /* Dark brown background */
+  border: 2px solid #5A4135; /* Slightly darker border */
+  border-radius: 8px; /* Rounded square */
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.2s ease;
+  padding: 0; /* Reset padding */
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Close Button Hover State */
+.popup-close:hover {
+  background: #5A4135; /* Darker brown on hover */
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+/* Popup Main Content Area: Beige section below the header */
+.popup-main-content {
+  padding: 25px 30px; /* Padding for the main content area */
+}
+
+/* Reward Details Container: Wrapper for text, image, button */
+.current-reward-details {
+  text-align: center;
+  color: #59443A; /* Darker brown text */
+}
+
+/* Paragraphs within reward details */
+.current-reward-details p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Reward Highlight Span: Styling for the reward name */
+.reward-highlight {
+  font-weight: 700;
+  color: #8B0000; /* Dark Red/Brown */
+  background: rgba(255, 182, 193, 0.3); /* Light pink highlight */
+  padding: 3px 8px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* Reward Image: The gift image */
+.reward-image {
+  display: block;
+  width: 100px; /* Adjusted size */
+  height: auto;
+  margin: 20px auto; /* Adjusted margin */
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+}
+
+/* Reward Image Hover State */
+.reward-image:hover {
+  transform: scale(1.05);
+}
+
+/* Popup Button: The 'Acknowledge' button */
+.popup-button {
+  background: #FFB6C1; /* Light Pink */
+  color: #8B0000; /* Dark Red/Brown */
+  border: none;
+  padding: 10px 25px;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+}
+
+/* Popup Button Hover State */
+.popup-button:hover {
+  background: #FFA07A; /* Lighter Salmon Pink */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 160, 122, 0.3);
+}
+
+/* Popup Button Active State (when clicked) */
+.popup-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(255, 160, 122, 0.2);
+}
+
+/* Popup Footer: Bottom section with additional text */
+.popup-footer {
+  background: #F5EAD8; /* Slightly darker beige */
+  padding: 10px 20px;
+  border-top: 1px solid #EAE0D1; /* Light border */
+  border-radius: 0 0 15px 15px; /* Round bottom corners */
+}
+
+/* Text within the footer */
+.popup-footer p {
+  color: #7A6A5A; /* Muted brown text */
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
+}
+
+/* --- Responsive Popup Styles --- */
+@media (max-width: 480px) {
+  /* Adjustments for small screens */
+  .daily-checkin-popup {
+    max-width: 95%;
+    border-radius: 12px;
+  }
+
+  .popup-header {
+    padding: 8px 15px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .popup-title {
+    font-size: 1.2rem;
+  }
+
+  .popup-close {
+    width: 28px;
+    height: 28px;
+    font-size: 1.3rem;
+    border-radius: 6px;
+  }
+
+  .popup-main-content {
+    padding: 20px;
+  }
+
+  .current-reward-details p {
+    font-size: 0.9rem;
+  }
+
+  .reward-image {
+    width: 80px;
+    margin: 15px auto;
+  }
+
+  .popup-button {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+  .popup-footer {
+    padding: 8px 15px;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .popup-footer p {
+    font-size: 0.75rem;
+  }
+} 

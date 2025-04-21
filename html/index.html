@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday</title>
+  <link rel="icon" type="image/jpg" href="../image/logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script>
+    // Check if user is coming directly to index.html without going through login
+    if (!sessionStorage.getItem('authenticated')) {
+      window.location.href = 'login.html';
+    }
+  </script>
+</head>
+
+<body>
+  <div class="nav-menu">
+    <ul>
+      <li><a href="../html/index.html" class="active" onclick="return false;">Home 🏠</a></li>
+      <li><a href="../html/activity.html">Activity 🕹️🎮</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content-area">
+    <div class="countdown-container" id="countdownContainer">
+      <div class="countdown-number" id="countdownNumber">10</div>
+      <img src="../image/flower.png" alt="Flower" class="flower-img" id="flowerImg">
+      <div class="birthday-message" id="birthdayMessage">
+        Happy Birthday to you<br>My Princess 👑✨
+      </div>
+    </div>
+
+    <div class="video-container">
+      <video class="birthday-video" controls>
+        <source src="../image/give.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <audio id="birthdayAudio">
+      <source src="../music/test.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <h1 class="title">สุขสันต์วันเกิดนะครับ ✨🌷</h1>
+    <p>ขอโทษนะครับที่ให้ของขวัญชิ้นนี้ช้าไป ขอโทษที่คอยกวนใจอยู่ตลอดนะครับ ขอให้มีความสุขเยอะๆ ยิ้มหัวเราะบ่อยๆ ถ้าวันในเศร้าอย่าลืมหาอะไรอร่อยๆทาน หรือ ถ้าต้องการใครสักคนคอยรับฟัง กดใช้บัตรงอแงนะครับ แล้วเดี๋ยวนิวมาตอบกลับให้นะะ อายุ 18 แล้วเย้ๆ 🌷🎉🎁🎉</p>
+
+    <div class="gift-box" onclick="handleGiftClick(this)">
+      <div class="lid"></div>
+      <div class="box"></div>
+      <div class="ribbon"></div>
+    </div>
+
+    <div class="inventory" onclick="showBagPopup()">
+      <img src="../image/school-bag.png" class="bag-icon" alt="Inventory Bag">
+    </div>
+
+    <div class="dark-overlay" id="bagOverlay" onclick="closeBagPopup()"></div>
+    <div class="bag-popup" id="bagPopup">
+      <div class="bag-header">
+        <span class="bag-title">Inventory</span>
+        <span class="close-bag" onclick="closeBagPopup()">×</span>
+      </div>
+      <div class="bag-grid">
+        <div class="bag-slot">
+          <img src="../image/ticket.png" alt="Inventory Ticket" onclick="showTicketPreview()">
+          <span class="ticket-count">5</span>
+        </div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+        <div class="bag-slot"></div>
+      </div>
+      <div class="bag-footer">
+        <span>30 slots</span>
+        <span>5/30 items</span>
+      </div>
+    </div>
+
+    <div class="preview-overlay" id="previewOverlay" onclick="closeTicketPreview()"></div>
+    <div class="ticket-preview" id="ticketPreview">
+      <div class="preview-header">
+        <span class="preview-title">บัตรงอแง</span>
+        <span class="close-preview" onclick="closeTicketPreview()">×</span>
+      </div>
+      <img src="../image/ticket.png" alt="Special Ticket">
+      <div class="preview-description">
+        สามารถใช้บัตรได้ตลอดเวลาที่อยากใช้ อยากขอ อยากได้อะไรก็ได้
+      </div>
+      <div class="preview-stats">
+        <div class="stat-item">
+          <span>🎫 Remaining:</span>
+          <span id="ticketRemaining">5</span>
+        </div>
+        <div class="stat-item">
+          <span>🎂 Type:</span>
+          <span>บัตร พิเศษ</span>
+        </div>
+        <div class="stat-item">
+          <span>📅 Valid:</span>
+          <span>ตลอดกาล</span>
+        </div>
+        <div class="stat-item">
+          <span>💝 Gift From:</span>
+          <span>นิวเองง</span>
+        </div>
+      </div>
+      <div class="ticket-actions">
+        <button class="action-button use-button" onclick="showUsageModal()">ใช้งาน</button>
+        <button class="action-button remove-button" onclick="confirmRemoveTicket()">ลบ</button>
+      </div>
+    </div>
+
+    <div class="usage-modal" id="usageModal">
+      <h3>ใช้ บัตรงอแง ✨</h3>
+      <p>ไหนคนเก่ง วันนี้มีเรื่องอะไรไม่สบายใจ หรือ อยากงอแงอะไรครับ หื้ม?</p>
+      <textarea class="usage-input" id="usageInput" rows="3" placeholder="ไหนเล่ามาสิคนเก่ง"></textarea>
+      <div class="modal-buttons">
+        <button class="action-button" onclick="closeUsageModal()">ยกเลิก</button>
+        <button class="action-button use-button" onclick="useTicket()">ส่ง</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="music-info">
+      <img src="../image/youu.jpg" alt="Music Icon" class="music-icon" id="songCover">
+      <div class="song-details">
+        <span class="music-name" id="songName">HYBS - Tip Toe (Official Video)</span>
+        <span class="artist-name" id="artistName" style="color: #666; font-size: 0.9rem;">Birthday Playlist</span>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress" id="progressBar"></div>
+    </div>
+    <div class="time-info">
+      <span id="currentTime">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+
+    <div class="playback-controls">
+      <button class="play-button" id="prevButton">⏮️</button>
+      <button id="playButton" class="play-button">▶️</button>
+      <button class="play-button" id="nextButton">⏭️</button>
+    </div>
+
+    <div class="volume-container">
+      <span class="volume-icon">🔊</span>
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.15" class="volume-slider">
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const playlist = [
+      {
+        title: "HYBS - Tip Toe (Official Video)",
+        artist: "Birthday Playlist",
+        cover: "../image/youu.jpg",
+        file: "../music/test.mp3"
+      },
+      {
+        title: "Laufey - Valentine (Official Audio)",
+        artist: "Birthday Playlist",
+        cover: "../image/you2.jpeg",
+        file: "../music/02.mp3"
+      },
+      {
+        title: "Heart To Heart",
+        artist: "Birthday Playlist",
+        cover: "../image/you3.jpeg",
+        file: "../music/03.mp3"
+      }
+    ];
+
+    const audio = document.getElementById('birthdayAudio');
+    const playButton = document.getElementById('playButton');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeSpan = document.getElementById('currentTime');
+    const durationSpan = document.getElementById('duration');
+    const songName = document.getElementById('songName');
+    const artistName = document.getElementById('artistName');
+    const songCover = document.getElementById('songCover');
+    
+    let currentSongIndex = 0;
+    let clickCount = 0;
+    let ticketCount = 5;
+
+    // Load song function
+    function loadSong(index) {
+      const song = playlist[index];
+      audio.src = song.file;
+      songName.textContent = song.title;
+      artistName.textContent = song.artist;
+      songCover.src = song.cover;
+      audio.load();
+    }
+
+    // Update progress bar
+    audio.addEventListener('timeupdate', () => {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = progress + '%';
+      
+      // Update time displays
+      const currentMinutes = Math.floor(audio.currentTime / 60);
+      const currentSeconds = Math.floor(audio.currentTime % 60);
+      currentTimeSpan.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
+      
+      if (!isNaN(audio.duration)) {
+        const durationMinutes = Math.floor(audio.duration / 60);
+        const durationSeconds = Math.floor(audio.duration % 60);
+        durationSpan.textContent = `${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
+      }
+    });
+
+    // Previous song
+    prevButton.addEventListener('click', () => {
+      currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+      loadSong(currentSongIndex);
+      if (!audio.paused) {
+        audio.play();
+      }
+    });
+
+    // Next song
+    nextButton.addEventListener('click', () => {
+      currentSongIndex = (currentSongIndex + 1) % playlist.length;
+      loadSong(currentSongIndex);
+      if (!audio.paused) {
+        audio.play();
+      }
+    });
+
+    // Auto play next song when current song ends
+    audio.addEventListener('ended', () => {
+      currentSongIndex = (currentSongIndex + 1) % playlist.length;
+      loadSong(currentSongIndex);
+      audio.play();
+    });
+
+    window.addEventListener('load', () => {
+      // Set initial volume to 15%
+      audio.volume = 0.15;
+      loadSong(currentSongIndex);
+      
+      // Volume control
+      volumeSlider.addEventListener('input', () => {
+        audio.volume = volumeSlider.value;
+        // Update volume icon based on volume level
+        const volumeIcon = document.querySelector('.volume-icon');
+        if (volumeSlider.value == 0) {
+          volumeIcon.textContent = '🔇';
+        } else if (volumeSlider.value < 0.5) {
+          volumeIcon.textContent = '🔈';
+        } else {
+          volumeIcon.textContent = '🔊';
+        }
+      });
+
+      // Play/Pause button
+      playButton.addEventListener('click', () => {
+        if (audio.paused) {
+          audio.play();
+          playButton.textContent = '⏸️';
+        } else {
+          audio.pause();
+          playButton.textContent = '▶️';
+        }
+      });
+    });
+
+    function handleGiftClick(giftBox) {
+      clickCount++;
+      if (clickCount >= 3 && !giftBox.classList.contains('open')) {
+        giftBox.classList.add('open');
+        createConfetti(giftBox);
+        
+        // Show ticket animation and add to inventory
+        setTimeout(() => {
+          const ticketContainer = document.getElementById('ticketContainer');
+          ticketContainer.classList.add('show');
+          
+          // Hide ticket container after 2 seconds and show in inventory
+          setTimeout(() => {
+            ticketContainer.classList.remove('show');
+            document.querySelector('.inventory-item').classList.add('visible');
+          }, 2000);
+        }, 1000);
+      }
+    }
+
+    function createConfetti(container) {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        container.appendChild(confetti);
+      }
+    }
+
+    function showTicketPreview() {
+      const preview = document.getElementById('ticketPreview');
+      const overlay = document.getElementById('previewOverlay');
+      preview.classList.add('show');
+      overlay.classList.add('show');
+    }
+
+    function closeTicketPreview() {
+      const preview = document.getElementById('ticketPreview');
+      const overlay = document.getElementById('previewOverlay');
+      preview.classList.remove('show');
+      overlay.classList.remove('show');
+    }
+
+    function showBagPopup() {
+      const popup = document.getElementById('bagPopup');
+      const overlay = document.getElementById('bagOverlay');
+      popup.classList.add('show');
+      overlay.classList.add('show');
+    }
+
+    function closeBagPopup() {
+      const popup = document.getElementById('bagPopup');
+      const overlay = document.getElementById('bagOverlay');
+      popup.classList.remove('show');
+      overlay.classList.remove('show');
+    }
+
+    function updateTicketCount() {
+      document.querySelector('.ticket-count').textContent = ticketCount;
+      document.getElementById('ticketRemaining').textContent = ticketCount;
+      if (ticketCount === 0) {
+        document.querySelector('.bag-slot img').style.opacity = '0.5';
+        document.querySelector('.use-button').disabled = true;
+        document.querySelector('.remove-button').disabled = true;
+      }
+    }
+
+    function showUsageModal() {
+      document.getElementById('usageModal').classList.add('show');
+    }
+
+    function closeUsageModal() {
+      document.getElementById('usageModal').classList.remove('show');
+      document.getElementById('usageInput').value = '';
+    }
+
+    function useTicket() {
+      const request = document.getElementById('usageInput').value.trim();
+      if (request) {
+        ticketCount--;
+        updateTicketCount();
+        alert('ใช้งานบัตรเรียบร้อยแล้วนะ\nจะรีบมาตอบข้อความนะ : ' + request);
+        closeUsageModal();
+        if (ticketCount === 0) {
+          closeTicketPreview();
+        }
+      } else {
+        alert('กดผิดอ่ะป่าว ยังไม่เห็นมีข้อความเลยย');
+      }
+    }
+
+    function confirmRemoveTicket() {
+      if (confirm('ต้องการจะลบบัตร 1 ใบจริงๆหรอครับ 😿?')) {
+        ticketCount--;
+        updateTicketCount();
+        if (ticketCount === 0) {
+          closeTicketPreview();
+        }
+      }
+    }
+
+    window.onload = function() {
+      // Check if countdown has already been shown in this session
+      if (sessionStorage.getItem('countdownShown')) {
+        // Skip countdown if already shown
+        const countdownContainer = document.getElementById('countdownContainer');
+        const flowerImg = document.getElementById('flowerImg');
+        const birthdayMessage = document.getElementById('birthdayMessage');
+        
+        countdownContainer.style.display = 'none';
+        flowerImg.classList.add('show');
+        birthdayMessage.classList.add('show');
+        return;
+      }
+
+      let countdown = 10;
+      const countdownNumber = document.getElementById('countdownNumber');
+      const birthdayMessage = document.getElementById('birthdayMessage');
+      const flowerImg = document.getElementById('flowerImg');
+      const countdownContainer = document.getElementById('countdownContainer');
+      const audio = document.getElementById('birthdayAudio');
+
+      function updateCountdown() {
+        if (countdown > 0) {
+          countdown--;
+          countdownNumber.textContent = countdown;
+          setTimeout(updateCountdown, 1000);
+        } else {
+          countdownNumber.classList.add('fade-out');
+          setTimeout(() => {
+            flowerImg.classList.add('show');
+            setTimeout(() => {
+              birthdayMessage.classList.add('show');
+              audio.play();
+            }, 500);
+          }, 1000);
+          
+          // Remove countdown container after message shows
+          setTimeout(() => {
+            countdownContainer.style.display = 'none';
+            // Mark countdown as shown in session storage
+            sessionStorage.setItem('countdownShown', 'true');
+          }, 5000);
+        }
+      }
+
+      // Start countdown after 1 second
+      setTimeout(updateCountdown, 1000);
+    };
+
+    // Add click handler for home menu
+    document.querySelector('.nav-menu a[href="../html/index.html"]').addEventListener('click', function(e) {
+      e.preventDefault();
+      // Don't reset countdown if it's already finished
+      if (document.getElementById('countdownContainer').style.display === 'none') {
+        return;
+      }
+      // Reset countdown if it's running
+      if (window.countdownInterval) {
+        clearInterval(window.countdownInterval);
+      }
+      // Hide countdown elements
+      const countdownContainer = document.getElementById('countdownContainer');
+      const flowerImg = document.getElementById('flowerImg');
+      const birthdayMessage = document.getElementById('birthdayMessage');
+      
+      countdownContainer.style.display = 'none';
+      flowerImg.classList.add('show');
+      birthdayMessage.classList.add('show');
+      
+      // Play audio if not already playing
+      const audio = document.getElementById('birthdayAudio');
+      if (audio.paused) {
+        audio.play();
+      }
+    });
+  </script>
+</body>
+</html>

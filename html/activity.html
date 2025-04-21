@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities</title>
+    <link rel="icon" type="image/jpg" href="../image/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/activity.css">
+    <script>
+        // Check if user is coming directly to activity.html without going through login
+        if (!sessionStorage.getItem('authenticated')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="backgroundMusic" src="../music/bg.mp3" loop></audio>
+
+    <script>
+        // Set up background music
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        backgroundMusic.volume = 0.08; // Set volume to 17%
+        backgroundMusic.play(); // Start playing the music
+    </script>
+
+    <div class="nav-menu"> 
+        <ul>
+            <li><a href="../html/index.html">Home 🏠</a></li>
+            <li><a href="../html/activity.html" class="active">Activity 🕹️🎮</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content-area">
+        <div class="activity-container">
+            <h1 class="activity-title">กิจกรรม 🎮</h1>
+            
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <div class="activity-icon">🃏</div>
+                    <h2 class="activity-name"> ท้าหรือถาม ( True or Dare )</h2>
+                    <p class="activity-description">มาเล่นเกมท้าทายและสนุกสนานด้วยกัน! เลือกคำถามหรือการท้าทายที่คุณชอบ</p>
+                </div>
+
+                <div class="activity-card" id="dailyCheckinCard">
+                    <div class="activity-icon">🎫</div>
+                    <h2 class="activity-name">Daily Check-In</h2>
+                    <p class="activity-description">เช็คอินทุกวัน จะได้รับของขวัญทุกวัน</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-icon">🎵</div>
+                    <h2 class="activity-name">Music Session</h2>
+                    <p class="activity-description">ฟังเพลงโปรดของคุณและแบ่งปันเพลงที่คุณชื่นชอบให้กันและกัน</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-icon">🎨</div>
+                    <h2 class="activity-name">Creative Time</h2>
+                    <p class="activity-description">มาสร้างสรรค์ผลงานศิลปะด้วยกัน! วาดรูป ระบายสี หรือทำอะไรพิเศษๆ ด้วยกัน</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-icon">📚</div>
+                    <h2 class="activity-name">Story Time</h2>
+                    <p class="activity-description">แบ่งปันเรื่องราว อ่านหนังสือ หรือสร้างเรื่องราวผจญภัยของเราเอง</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-icon">🍳</div>
+                    <h2 class="activity-name">Cooking Fun</h2>
+                    <p class="activity-description">มาทำอาหารอร่อยๆ ด้วยกัน! เลือกสูตรอาหารและเริ่มทำอาหารกันเลย</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Overlay: Dims the background when popup is active -->
+    <div class="popup-overlay" id="checkinOverlay"></div>
+
+    <!-- Daily Check-in Popup: Main container for the popup -->
+    <div class="daily-checkin-popup" id="checkinPopup">
+        <!-- Popup Header: Contains title and close button -->
+        <div class="popup-header">
+            <h3 class="popup-title">Daily Check-In Reward ✨</h3>
+            <span class="popup-close" id="closeCheckinPopup">&times;</span>
+        </div>
+        <!-- Popup Main Content: Area for reward details -->
+        <div class="popup-main-content">
+            <!-- Current Reward Details: Specific content for the day's reward -->
+            <div class="current-reward-details">
+                <p>ขอบคุณที่เช็คอินนะครับ!</p>
+                <p>คุณได้รับ <span class="reward-highlight">[ชื่อของขวัญ]</span> เป็นรางวัล!</p>
+                <img src="../image/gift.png" alt="Reward Gift" class="reward-image">
+                <button class="popup-button">รับทราบ</button>
+            </div>
+        </div>
+        <!-- Popup Footer: Additional info or message area -->
+        <div class="popup-footer">
+            <p>รางวัลการเช็คอินจะถูกส่งเข้าคลังของคุณ</p>
+        </div>
+    </div>
+
+    <script>
+        // --- Popup Interaction Logic ---
+
+        // Get references to popup elements
+        const checkinCard = document.getElementById('dailyCheckinCard');
+        const checkinPopup = document.getElementById('checkinPopup');
+        const checkinOverlay = document.getElementById('checkinOverlay');
+        const closeCheckinPopup = document.getElementById('closeCheckinPopup');
+        const popupAcknowledgeButton = checkinPopup.querySelector('.popup-button');
+
+        // Function to show the popup and overlay
+        function showCheckinPopup() {
+            checkinPopup.classList.add('show');
+            checkinOverlay.classList.add('show');
+        }
+
+        // Function to hide the popup and overlay
+        function hideCheckinPopup() {
+            checkinPopup.classList.remove('show');
+            checkinOverlay.classList.remove('show');
+        }
+
+        // --- Event Listeners ---
+
+        // Show popup when the check-in card is clicked
+        if (checkinCard) {
+            checkinCard.addEventListener('click', showCheckinPopup);
+        }
+        // Hide popup when the close button is clicked
+        if (closeCheckinPopup) {
+            closeCheckinPopup.addEventListener('click', hideCheckinPopup);
+        }
+        // Hide popup when the overlay is clicked
+        if (checkinOverlay) {
+            checkinOverlay.addEventListener('click', hideCheckinPopup);
+        }
+        // Hide popup when the acknowledge button is clicked
+        if (popupAcknowledgeButton) {
+            popupAcknowledgeButton.addEventListener('click', hideCheckinPopup);
+        }
+    </script>
+</body>
+</html>
