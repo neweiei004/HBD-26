@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="../css/styles.css">
   <script>
     // Check if user is coming directly to index.html without going through login
     if (!sessionStorage.getItem('authenticated')) {
@@ -32,7 +32,7 @@
   <div class="main-content-area">
     <div class="countdown-container" id="countdownContainer">
       <div class="countdown-number" id="countdownNumber">10</div>
-      <img src="../image/flower.png" alt="Flower" class="flower-img" id="flowerImg">
+      <img src="../img/flower.png" alt="Flower" class="flower-img" id="flowerImg">
       <div class="birthday-message" id="birthdayMessage">
         Happy Birthday to you<br>My Princess 👑✨
       </div>
@@ -40,7 +40,7 @@
 
     <div class="video-container">
       <video class="birthday-video" controls>
-        <source src="../image/give.mp4" type="video/mp4">
+        <source src="../img/give.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
@@ -60,7 +60,7 @@
     </div>
 
     <div class="inventory" onclick="showBagPopup()">
-      <img src="../image/school-bag.png" class="bag-icon" alt="Inventory Bag">
+      <img src="../img/school-bag.png" class="bag-icon" alt="Inventory Bag">
     </div>
 
     <div class="dark-overlay" id="bagOverlay" onclick="closeBagPopup()"></div>
@@ -71,7 +71,7 @@
       </div>
       <div class="bag-grid">
         <div class="bag-slot">
-          <img src="../image/ticket.png" alt="Inventory Ticket" onclick="showTicketPreview()">
+          <img src="../img/ticket.png" alt="Inventory Ticket" onclick="showTicketPreview()">
           <span class="ticket-count">5</span>
         </div>
         <div class="bag-slot"></div>
@@ -114,7 +114,7 @@
         <span class="preview-title">บัตรงอแง</span>
         <span class="close-preview" onclick="closeTicketPreview()">×</span>
       </div>
-      <img src="../image/ticket.png" alt="Special Ticket">
+      <img src="../img/ticket.png" alt="Special Ticket">
       <div class="preview-description">
         สามารถใช้บัตรได้ตลอดเวลาที่อยากใช้ อยากขอ อยากได้อะไรก็ได้
       </div>
@@ -155,7 +155,7 @@
 
   <div class="controls">
     <div class="music-info">
-      <img src="../image/youu.jpg" alt="Music Icon" class="music-icon" id="songCover">
+      <img src="../img/cute01.jpg" alt="Music Icon" class="music-icon" id="songCover">
       <div class="song-details">
         <span class="music-name" id="songName">HYBS - Tip Toe (Official Video)</span>
         <span class="artist-name" id="artistName" style="color: #666; font-size: 0.9rem;">Birthday Playlist</span>
@@ -188,19 +188,19 @@
       {
         title: "HYBS - Tip Toe (Official Video)",
         artist: "Birthday Playlist",
-        cover: "../image/youu.jpg",
+        cover: "../img/cute01.jpg",
         file: "../music/test.mp3"
       },
       {
         title: "Laufey - Valentine (Official Audio)",
         artist: "Birthday Playlist",
-        cover: "../image/you2.jpeg",
+        cover: "../img/cute02.jpg",
         file: "../music/02.mp3"
       },
       {
         title: "Heart To Heart",
         artist: "Birthday Playlist",
-        cover: "../image/you3.jpeg",
+        cover: "../img/cute03.jpg",
         file: "../music/03.mp3"
       }
     ];
