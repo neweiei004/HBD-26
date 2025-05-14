@@ -486,6 +486,27 @@ body {
     .nav-menu a.active {
       padding: 6px 12px;
     }
+
+    img {
+      width: 100%; /* ปรับให้รูปภาพเต็มความกว้างของหน้าจอ */
+      max-width: 400px; /* จำกัดขนาดสูงสุด */
+      height: auto; /* รักษาอัตราส่วนของรูปภาพ */
+    }
+
+    .flower-img {
+      width: 80%; /* ปรับขนาดรูปภาพดอกไม้ */
+      max-width: 300px;
+    }
+
+    .bag-icon {
+      width: 70px; /* ปรับขนาดไอคอนกระเป๋า */
+      height: auto;
+    }
+
+    .music-icon {
+      width: 80px; /* ปรับขนาดไอคอนเพลง */
+      height: auto;
+    }
   }
   
   @media (max-width: 480px) {
@@ -1350,4 +1371,3 @@ body {
       padding: 10px;
     }
   }
-  
