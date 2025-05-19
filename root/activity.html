@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activities</title>
-    <link rel="icon" type="icon" href="/image/logo.jpg">
+    <link rel="icon" type="icon" href="/img/logo.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/activity.css">
+    <link rel="stylesheet" href="/css/activity.css">
     <script>
         // Check if user is coming directly to activity.html without going through login
         if (!sessionStorage.getItem('authenticated')) {
-            window.location.href = 'login.html';
+            window.location.href = '/login.html';
         }
     </script>
 </head>
 <body>
     <!-- Background Music -->
-    <audio id="backgroundMusic" src="../music/bg.mp3" loop></audio>
+    <audio id="backgroundMusic" src="/music/bg.mp3" loop></audio>
 
     <script>
         // Set up background music
@@ -32,8 +32,8 @@
 
     <div class="nav-menu"> 
         <ul>
-            <li><a href="../html/index.html">Home 🏠</a></li>
-            <li><a href="../html/activity.html" class="active">Activity 🕹️🎮</a></li>
+            <li><a href="/index.html">Home 🏠</a></li>
+            <li><a href="/activity.html" class="active">Activity 🕹️🎮</a></li>
         </ul>
     </div>
 
@@ -97,7 +97,7 @@
             <div class="current-reward-details">
                 <p>ขอบคุณที่เช็คอินนะครับ!</p>
                 <p>คุณได้รับ <span class="reward-highlight">[ชื่อของขวัญ]</span> เป็นรางวัล!</p>
-                <img src="../image/gift.png" alt="Reward Gift" class="reward-image">
+                <img src="/img/gift.png" alt="Reward Gift" class="reward-image">
                 <button class="popup-button">รับทราบ</button>
             </div>
         </div>
