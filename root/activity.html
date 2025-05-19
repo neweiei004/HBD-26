@@ -42,10 +42,10 @@
             <h1 class="activity-title">กิจกรรม 🎮</h1>
             
             <div class="activity-grid">
-                <div class="activity-card">
+                <div class="activity-card" style="cursor: pointer;">
                     <div class="activity-icon">🃏</div>
-                    <h2 class="activity-name"> ท้าหรือถาม ( True or Dare )</h2>
-                    <p class="activity-description">มาเล่นเกมท้าทายและสนุกสนานด้วยกัน! เลือกคำถามหรือการท้าทายที่คุณชอบ</p>
+                    <h2 class="activity-name">เกมจับคู่ภาพ</h2>
+                    <p class="activity-description">จับคู่ภาพให้เร็วที่สุด เพื่อรับแต้มแลกของขวัญ</p>
                 </div>
 
                 <div class="activity-card" id="dailyCheckinCard">
@@ -107,15 +107,28 @@
         </div>
     </div>
 
+    <script src="/js/memory-game.js"></script>
     <script>
         // --- Popup Interaction Logic ---
 
         // Get references to popup elements
         const checkinCard = document.getElementById('dailyCheckinCard');
+        const memoryGameCard = document.querySelector('.activity-card:first-child');
         const checkinPopup = document.getElementById('checkinPopup');
         const checkinOverlay = document.getElementById('checkinOverlay');
         const closeCheckinPopup = document.getElementById('closeCheckinPopup');
         const popupAcknowledgeButton = checkinPopup.querySelector('.popup-button');
+
+        // Memory game card click handler
+        if (memoryGameCard) {
+            memoryGameCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                // The memory game will be initialized when the script loads
+                // and will be shown when the container is added to the DOM
+                const memoryGameEvent = new Event('DOMContentLoaded');
+                document.dispatchEvent(memoryGameEvent);
+            });
+        }
 
         // Function to show the popup and overlay
         function showCheckinPopup() {
