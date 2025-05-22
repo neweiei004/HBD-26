@@ -293,14 +293,17 @@ function startGame(gameBoard, movesElement, timerElement) {
     cards.forEach((card, index) => {
         const cardElement = document.createElement('div');
         cardElement.classList.add('memory-card');
+        cardElement.style.borderRadius = '6px'; // ทำให้การ์ดเป็นสี่เหลี่ยมชัดเจน
         
         const frontFace = document.createElement('div');
         frontFace.classList.add('front-face');
         frontFace.textContent = '?';
+        frontFace.style.borderRadius = '5px'; // ทำให้ด้านหน้าเป็นสี่เหลี่ยมชัดเจน
         
         const backFace = document.createElement('div');
         backFace.classList.add('back-face');
         backFace.style.backgroundImage = `url(${card})`;
+        backFace.style.borderRadius = '5px'; // ทำให้ด้านหลังเป็นสี่เหลี่ยมชัดเจน
         
         cardElement.appendChild(frontFace);
         cardElement.appendChild(backFace);

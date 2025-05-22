@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="/css/activity.css">
     <link rel="stylesheet" href="/css/memory-game.css">
     <style>
-        /* Difficulty Modal Styles */
-        .difficulty-modal {
+        /* Game Selection Modal Styles */
+        .game-select-modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -23,7 +23,7 @@
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 2rem 1.5rem;
-            border-radius: 20px;
+            border-radius: 4px !important;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             z-index: 2000;
             width: 90%;
@@ -38,10 +38,10 @@
             margin-bottom: 1.5rem;
         }
         
-        .modal-header h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.8rem;
-            color: white;
+        .game-select-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
@@ -69,7 +69,7 @@
             position: relative;
             padding: 1.2rem 1.5rem;
             border: none;
-            border-radius: 15px;
+            border-radius: 4px !important;
             font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
@@ -152,25 +152,18 @@
 
         .close-btn {
             background: rgba(255, 255, 255, 0.2);
+            border: none;
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 24px;
-            border-radius: 30px;
-            cursor: pointer;
+            padding: 0.8rem 2rem;
+            border-radius: 4px !important;
             font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 1rem;
-            backdrop-filter: blur(5px);
         }
         
         .close-btn:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .close-btn:hover {
-            background: #a51d4a;
             transform: translateY(-2px);
         }
 
@@ -313,35 +306,35 @@
     </div>
 
     <script src="/js/memory-game-new.js"></script>
-    <!-- Memory Game Difficulty Modal -->
-    <div class="popup-overlay" id="difficultyOverlay"></div>
-    <div class="difficulty-modal" id="difficultyModal">
+    <!-- Game Selection Modal -->
+    <div class="popup-overlay" id="gameSelectOverlay"></div>
+    <div class="game-select-modal" id="gameSelectModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎮 เลือกระดับความยาก</h3>
-                <p class="modal-subtitle">เลือกความยากที่ต้องการเล่น</p>
+                <h3>🎮 เลือกเกมที่ต้องการเล่น</h3>
+                <p class="modal-subtitle">เลือกเกมที่คุณต้องการเล่น</p>
             </div>
-            <div class="difficulty-options">
-                <button class="difficulty-btn easy" data-difficulty="easy">
-                    <span class="difficulty-icon">😊</span>
-                    <span class="difficulty-name">ง่าย</span>
-                    <span class="difficulty-desc">3 นาที | 6 คู่</span>
+            <div class="game-options">
+                <button class="game-btn memory-game" data-game="memory">
+                    <span class="game-icon">🧠</span>
+                    <span class="game-name">เกมจับคู่ภาพ</span>
+                    <span class="game-desc">ทดสอบความจำของคุณ</span>
                 </button>
-                <button class="difficulty-btn normal" data-difficulty="normal">
-                    <span class="difficulty-icon">😎</span>
-                    <span class="difficulty-name">ปานกลาง</span>
-                    <span class="difficulty-desc">2 นาที | 8 คู่</span>
+                <button class="game-btn ghost-hunt" data-game="ghost">
+                    <span class="game-icon">👻</span>
+                    <span class="game-name">ล่าผี</span>
+                    <span class="game-desc">จับผีให้ได้มากที่สุด</span>
                 </button>
-                <button class="difficulty-btn hard" data-difficulty="hard">
-                    <span class="difficulty-icon">🔥</span>
-                    <span class="difficulty-name">ยาก</span>
-                    <span class="difficulty-desc">1 นาที | 10 คู่</span>
+                <button class="game-btn puzzle" data-game="puzzle">
+                    <span class="game-icon">🧩</span>
+                    <span class="game-name">ปริศนา</span>
+                    <span class="game-desc">แก้ปริศนาสุดท้าทาย</span>
                 </button>
             </div>
-            <div class="difficulty-info">
-                <p id="difficultyDescription">เลือกระดับความยากเพื่อเริ่มเกม</p>
+            <div class="game-info">
+                <p id="gameDescription">เลือกเกมที่ต้องการเล่น</p>
             </div>
-            <button class="close-btn" id="closeDifficultyModal">ปิด</button>
+            <button class="close-btn" id="closeGameSelectModal">ปิด</button>
         </div>
     </div>
 
@@ -351,59 +344,56 @@
         // Get references to popup elements
         const checkinCard = document.getElementById('dailyCheckinCard');
         const memoryGameCard = document.getElementById('memoryGameCard');
-        const difficultyModal = document.getElementById('difficultyModal');
-        const difficultyOverlay = document.getElementById('difficultyOverlay');
-        const closeDifficultyModal = document.getElementById('closeDifficultyModal');
-        const difficultyDescription = document.getElementById('difficultyDescription');
+        const gameSelectModal = document.getElementById('gameSelectModal');
+        const gameSelectOverlay = document.getElementById('gameSelectOverlay');
+        const closeGameSelectModal = document.getElementById('closeGameSelectModal');
+        const gameDescription = document.getElementById('gameDescription');
         
-        // Difficulty settings
-        const difficultySettings = {
-            easy: {
-                name: 'ง่าย',
-                description: 'เวลา 3 นาที',
-                timeLimit: 180, // 3 minutes in seconds
-                pairs: 6
+        // Game settings
+        const gameSettings = {
+            memory: {
+                name: 'เกมจับคู่ภาพ',
+                description: 'ทดสอบความจำของคุณ',
+                path: '/memory-game.html'
             },
-            normal: {
-                name: 'ปานกลาง',
-                description: 'เวลา 2 นาที',
-                timeLimit: 120, // 2 minutes in seconds
-                pairs: 8
+            ghost: {
+                name: 'ล่าผี',
+                description: 'จับผีให้ได้มากที่สุด',
+                path: '/ghost-hunt.html'
             },
-            hard: {
-                name: 'ยาก',
-                description: 'เวลา 1 นาที',
-                timeLimit: 60, // 1 minute in seconds
-                pairs: 10
+            puzzle: {
+                name: 'ปริศนา',
+                description: 'แก้ปริศนาสุดท้าทาย',
+                path: '/puzzle-game.html'
             }
         };
         
-        // Show difficulty modal
-        function showDifficultyModal() {
-            difficultyModal.style.display = 'block';
-            difficultyOverlay.style.display = 'block';
+        // Show game selection modal
+        function showGameSelectModal() {
+            gameSelectModal.style.display = 'block';
+            gameSelectOverlay.style.display = 'block';
         }
         
-        // Hide difficulty modal
-        function hideDifficultyModal() {
-            difficultyModal.style.display = 'none';
-            difficultyOverlay.style.display = 'none';
+        // Hide game selection modal
+        function hideGameSelectModal() {
+            gameSelectModal.style.display = 'none';
+            gameSelectOverlay.style.display = 'none';
         }
         
-        // Handle difficulty selection
-        document.querySelectorAll('.difficulty-btn').forEach(button => {
+        // Handle game selection
+        document.querySelectorAll('.game-btn').forEach(button => {
             button.addEventListener('click', function() {
-                const difficulty = this.dataset.difficulty;
-                const settings = difficultySettings[difficulty];
-                difficultyDescription.textContent = `ระดับ ${settings.name}: ${settings.description}`;
+                const game = this.dataset.game;
+                const settings = gameSettings[game];
+                gameDescription.textContent = `${settings.name}: ${settings.description}`;
                 
-                // Start game with selected difficulty
-                startMemoryGame(settings);
-                hideDifficultyModal();
+                // Navigate to selected game
+                window.location.href = settings.path;
+                hideGameSelectModal();
             });
         });
         
-        // Start game with selected difficulty
+        // Start memory game (kept for compatibility)
         function startMemoryGame(settings) {
             // Add loading state
             const originalText = memoryGameCard.innerHTML;
@@ -421,14 +411,15 @@
         }
         
         // Close modal when clicking close button or overlay
-        closeDifficultyModal.addEventListener('click', hideDifficultyModal);
-        difficultyOverlay.addEventListener('click', hideDifficultyModal);
+        closeGameSelectModal.addEventListener('click', hideGameSelectModal);
+        gameSelectOverlay.addEventListener('click', hideGameSelectModal);
         
-        // Show difficulty modal when memory game card is clicked
+        // Show game selection modal when memory game card is clicked
         if (memoryGameCard) {
-            memoryGameCard.addEventListener('click', showDifficultyModal);
+            memoryGameCard.addEventListener('click', function() {
+                showGameSelectModal();
+            });
         }
-        
         const checkinPopup = document.getElementById('checkinPopup');
         const checkinOverlay = document.getElementById('checkinOverlay');
         const closeCheckinPopup = document.getElementById('closeCheckinPopup');

@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="th">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>เกมล่าผี</title>
+		<link rel="icon" type="icon" href="/img/logo.jpg">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<script src="//codepen.io/steveg3003/pen/zBVakw.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.min.js"></script>
+		<style>
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				font-family: 'Kanit', sans-serif;
+				overflow: hidden;
+				touch-action: manipulation;
+			}
+
+			body {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			}
+
+			#container {
+				margin: 0;
+				padding: 0;
+				height: 100%;
+				width: 100%;
+				position: relative;
+			}
+
+			svg {
+				z-index: 10;
+				-webkit-backface-visibility: hidden;
+				backface-visibility: hidden;
+			}
+
+			.back-button {
+				position: absolute;
+				top: 20px;
+				left: 20px;
+				background: rgba(255, 255, 255, 0.2);
+				border: none;
+				color: white;
+				padding: 8px 15px;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				font-weight: 500;
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				z-index: 100;
+				font-family: 'Kanit', sans-serif;
+				font-size: 16px;
+			}
+			
+			/* Mobile responsive styles */
+			@media (max-width: 768px) {
+				/* Mobile UI layout - create a fixed game info bar at the top */
+				.mobile-device .back-button,
+				.mobile-device .score-display,
+				.mobile-device .lives-display,
+				.mobile-device .wave-display,
+				.mobile-device .game-title {
+					position: fixed;
+					z-index: 200;
+				}
+				
+				/* Create a top bar for game info */
+				.mobile-device:before {
+					content: '';
+					position: fixed;
+					top: 0;
+					left: 0;
+					right: 0;
+					height: 40px;
+					background: rgba(0, 0, 0, 0.4);
+					z-index: 150;
+					backdrop-filter: blur(5px);
+				}
+				
+				/* Back button */
+				.back-button {
+					top: 5px;
+					left: 5px;
+					padding: 4px 8px;
+					font-size: 12px;
+					width: auto;
+					height: 30px;
+					min-width: 30px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				
+				/* Game title - center in top bar */
+				.game-title {
+					font-size: 1rem;
+					top: 5px;
+					left: 50%;
+					transform: translateX(-50%);
+					width: 40%;
+					text-align: center;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					height: 30px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				
+				/* Score display - right side of top bar */
+				.score-display {
+					top: 5px;
+					right: 5px;
+					padding: 4px 8px;
+					font-size: 12px;
+					width: auto;
+					height: 30px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				
+				/* Lives display - bottom left corner */
+				.lives-display {
+					top: auto;
+					bottom: 80px;
+					left: 5px;
+					right: auto;
+					padding: 4px 8px;
+					font-size: 12px;
+					width: auto;
+					height: 30px;
+					background: rgba(0, 0, 0, 0.4);
+					border-radius: 15px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				
+				/* Wave display - bottom right corner */
+				.wave-display {
+					top: auto;
+					bottom: 80px;
+					right: 5px;
+					padding: 4px 8px;
+					font-size: 12px;
+					width: auto;
+					height: 30px;
+					background: rgba(0, 0, 0, 0.4);
+					border-radius: 15px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				
+				.pot {
+					width: 80px;
+					height: 60px;
+				}
+				
+				.difficulty-modal {
+					max-width: 90%;
+					width: 300px;
+				}
+				
+				.difficulty-btn {
+					padding: 10px;
+					width: 30%;
+				}
+				
+				.difficulty-icon {
+					font-size: 1.5rem;
+				}
+				
+				.difficulty-name {
+					font-size: 0.9rem;
+				}
+				
+				.difficulty-desc {
+					font-size: 0.7rem;
+				}
+				
+				.countdown {
+					font-size: 2.5rem;
+					padding: 20px 40px;
+				}
+				
+				.wave-complete {
+					font-size: 1.2rem;
+					padding: 15px 25px;
+				}
+				
+				.ghost-caught {
+					font-size: 1.5rem;
+				}
+				
+				.game-over h2 {
+					font-size: 2rem;
+				}
+				
+				.game-over p {
+					font-size: 1rem;
+				}
+			}
+
+			.back-button:hover {
+				background: rgba(255, 255, 255, 0.3);
+			}
+
+			.score-display {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				background: rgba(255, 255, 255, 0.2);
+				border: none;
+				color: white;
+				padding: 8px 15px;
+				border-radius: 4px;
+				font-weight: 500;
+				z-index: 100;
+				font-family: 'Kanit', sans-serif;
+			}
+
+			.lives-display {
+				position: absolute;
+				top: 20px;
+				right: 150px;
+				background: rgba(255, 255, 255, 0.2);
+				border: none;
+				color: white;
+				padding: 8px 15px;
+				border-radius: 4px;
+				font-weight: 500;
+				z-index: 100;
+				font-family: 'Kanit', sans-serif;
+				display: flex;
+				align-items: center;
+				gap: 5px;
+			}
+
+			.heart {
+				color: #FF6978;
+				font-size: 1.2rem;
+			}
+
+			.wave-display {
+				position: absolute;
+				top: 60px;
+				right: 20px;
+				background: rgba(255, 255, 255, 0.2);
+				border: none;
+				color: white;
+				padding: 8px 15px;
+				border-radius: 4px;
+				font-weight: 500;
+				z-index: 100;
+				font-family: 'Kanit', sans-serif;
+			}
+
+			.wave-complete, .countdown {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: rgba(0, 0, 0, 0.7);
+				color: white;
+				padding: 20px 30px;
+				border-radius: 10px;
+				font-size: 1.5rem;
+				font-weight: 600;
+				z-index: 200;
+				animation: fadeIn 0.5s, fadeOut 0.5s 2s forwards;
+				text-align: center;
+			}
+			
+			.countdown {
+				font-size: 3rem;
+				animation: none;
+				padding: 30px 50px;
+				z-index: 500;
+			}
+			
+			/* Mobile hint styles */
+			.mobile-hint {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: rgba(0, 0, 0, 0.8);
+				color: white;
+				padding: 20px;
+				border-radius: 10px;
+				font-size: 1.2rem;
+				text-align: center;
+				z-index: 1000;
+				transition: opacity 1s ease;
+				line-height: 1.5;
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+				width: 80%;
+				max-width: 300px;
+			}
+			
+			/* Mobile countdown styles */
+			@media (max-width: 768px) {
+				.countdown {
+					font-size: 2.5rem;
+					padding: 20px;
+					border-radius: 50%;
+					width: 100px;
+					height: 100px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+					background: rgba(0, 0, 0, 0.8);
+				}
+			}
+
+			.game-over {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.8);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				z-index: 1000;
+				justify-content: center;
+				z-index: 1000;
+				color: white;
+				font-family: 'Kanit', sans-serif;
+			}
+
+			.game-over h2 {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				color: #FF6978;
+			}
+
+			.game-over p {
+				font-size: 1.2rem;
+				margin-bottom: 2rem;
+			}
+
+			.game-over button {
+				background: #FF6978;
+				border: none;
+				color: white;
+				padding: 10px 20px;
+				border-radius: 4px;
+				font-size: 1rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				font-family: 'Kanit', sans-serif;
+			}
+
+			.game-over button:hover {
+				background: #e55c6a;
+				transform: scale(1.05);
+			}
+
+			@keyframes fadeIn {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+
+			@keyframes fadeOut {
+				from { opacity: 1; }
+				to { opacity: 0; }
+			}
+
+			.game-title {
+				position: absolute;
+				top: 20px;
+				left: 50%;
+				transform: translateX(-50%);
+				color: white;
+				font-size: 1.5rem;
+				font-weight: 600;
+				z-index: 100;
+				font-family: 'Kanit', sans-serif;
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+			}
+
+			.pot {
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100px;
+				height: 80px;
+				background: #333;
+				border-radius: 0 0 50px 50px;
+				z-index: 5;
+				border: 3px solid #222;
+				overflow: hidden;
+			}
+			
+			/* Adjust pot position for mobile */
+			@media (max-width: 768px) {
+				.pot {
+					bottom: 40px; /* Move pot up more on mobile to avoid system UI */
+					width: 120px; /* Make pot slightly larger on mobile for easier targeting */
+					height: 90px;
+				}
+			}
+
+			.pot:before {
+				content: '';
+				position: absolute;
+				top: -10px;
+				left: -10px;
+				right: -10px;
+				height: 20px;
+				background: #444;
+				border-radius: 5px;
+				border: 3px solid #222;
+			}
+
+			.pot-glow {
+				position: absolute;
+				top: 20px;
+				left: 10px;
+				right: 10px;
+				bottom: 10px;
+				background: rgba(0, 255, 0, 0.1);
+				border-radius: 50%;
+				filter: blur(5px);
+				animation: glow 2s infinite alternate;
+			}
+
+			.score-animation {
+				animation: potShake 0.5s ease;
+			}
+
+			@keyframes glow {
+				from { opacity: 0.3; }
+				to { opacity: 0.7; }
+			}
+
+			@keyframes potShake {
+				0% { transform: translateX(-50%) rotate(0deg); }
+				25% { transform: translateX(-50%) rotate(-5deg); }
+				50% { transform: translateX(-50%) rotate(5deg); }
+				75% { transform: translateX(-50%) rotate(-5deg); }
+				100% { transform: translateX(-50%) rotate(0deg); }
+			}
+
+			.ghost-caught {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				font-size: 2rem;
+				color: white;
+				font-weight: bold;
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+				animation: fadeOut 1s forwards;
+				z-index: 200;
+			}
+
+			@keyframes fadeOut {
+				0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+				100% { opacity: 0; transform: translate(-50%, -100%) scale(1.5); }
+			}
+
+			/* Difficulty Modal Styles */
+			.difficulty-modal {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				padding: 2rem 1.5rem;
+				border-radius: 15px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+				z-index: 300;
+				width: 80%;
+				max-width: 400px;
+				z-index: 2000;
+				width: 90%;
+				max-width: 380px;
+				text-align: center;
+				color: white;
+				font-family: 'Kanit', sans-serif;
+				border: 1px solid rgba(255, 255, 255, 0.2);
+			}
+
+			.modal-header {
+				margin-bottom: 1.5rem;
+			}
+
+			.modal-header h3 {
+				margin: 0 0 0.5rem 0;
+				font-size: 1.8rem;
+				color: white;
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			}
+
+			.modal-subtitle {
+				margin: 0;
+				color: rgba(255, 255, 255, 0.9);
+				font-size: 1rem;
+			}
+
+			.difficulty-options {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+				margin: 2rem 0 1.5rem;
+			}
+
+			.difficulty-btn {
+				position: relative;
+				padding: 1.2rem 1.5rem;
+				border: none;
+				border-radius: 4px;
+				font-size: 1.1rem;
+				font-weight: 500;
+				cursor: pointer;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				color: white;
+				text-align: left;
+				overflow: hidden;
+				box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+			}
+			
+			/* Mobile-specific button styles */
+			@media (max-width: 768px) {
+				.difficulty-btn {
+					padding: 1rem 1.2rem;
+					border-radius: 50px;
+					font-size: 1rem;
+					text-align: center;
+					justify-content: center;
+					align-items: center;
+					min-height: 60px;
+					margin-bottom: 15px;
+				}
+				
+				.modal-header h3 {
+					font-size: 1.5rem;
+				}
+				
+				.difficulty-options {
+					gap: 0.5rem;
+					margin: 1.5rem 0 1rem;
+				}
+			}
+
+			.difficulty-btn::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(255, 255, 255, 0.1);
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+
+			.difficulty-btn:hover::before {
+				opacity: 1;
+			}
+
+			.difficulty-btn.easy {
+				background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+			}
+
+			.difficulty-btn.normal {
+				background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+			}
+
+			.difficulty-btn.hard {
+				background: linear-gradient(135deg, #f43b47 0%, #453a94 100%);
+			}
+
+			.difficulty-icon {
+				font-size: 1.5rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.difficulty-name {
+				font-size: 1rem;
+				font-weight: 500;
+				margin-top: 0.5rem;
+			}
+
+			.difficulty-desc {
+				font-size: 0.8rem;
+				opacity: 0.8;
+				margin-top: 0.2rem;
+			}
+
+			.difficulty-info {
+				margin: 1.5rem 0;
+				font-size: 0.95rem;
+				color: rgba(255, 255, 255, 0.9);
+			}
+
+			.close-btn {
+				background: rgba(255, 255, 255, 0.2);
+				border: none;
+				color: white;
+				padding: 0.8rem 2rem;
+				border-radius: 4px;
+				font-size: 1rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				font-weight: 500;
+			}
+
+			.close-btn:hover {
+				background: rgba(255, 255, 255, 0.3);
+				transform: translateY(-2px);
+			}
+
+			.difficulty-overlay {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.7);
+				z-index: 1500;
+			}
+
+			/* Ghost color styles */
+			.ghost-white {
+				fill: white;
+				fill-opacity: 0.9;
+			}
+
+			.ghost-red {
+				fill: #ff5555;
+				fill-opacity: 0.9;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<button class="back-button" id="backButton">← กลับ</button>
+			<div class="game-title">เกมนำผีใส่หม้อ</div>
+			<div class="score-display">คะแนน: <span id="scoreValue">0</span></div>
+			<div class="pot">
+				<div class="pot-glow"></div>
+			</div>
+			<svg id="svg"></svg>
+		</div>
+
+		<!-- Difficulty Modal -->
+		<div class="difficulty-overlay" id="difficultyOverlay"></div>
+		<div class="difficulty-modal" id="difficultyModal">
+			<div class="difficulty-modal" style="display: block;">
+				<div class="modal-header">
+					<h3>เลือกระดับความยาก</h3>
+					<p class="modal-subtitle">เลือกระดับความยากของเกม</p>
+					<p class="modal-subtitle">ผีขาว = 1 คะแนน, ผีแดง = 3 คะแนน</p>
+				</div>
+				<div class="difficulty-options">
+					<button class="difficulty-btn easy" data-difficulty="easy">
+						<div class="difficulty-icon">😊</div>
+						<div class="difficulty-name">ง่าย</div>
+						<div class="difficulty-desc">ผี 5 ตัว</div>
+					</button>
+					<button class="difficulty-btn medium" data-difficulty="medium">
+						<div class="difficulty-icon">😐</div>
+						<div class="difficulty-name">ปานกลาง</div>
+						<div class="difficulty-desc">ผี 8 ตัว</div>
+					</button>
+					<button class="difficulty-btn hard" data-difficulty="hard">
+						<div class="difficulty-icon">😱</div>
+						<div class="difficulty-name">ยาก</div>
+						<div class="difficulty-desc">ผี 12 ตัว</div>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			'use strict';
+			console.clear();
+			
+			// Add viewport meta tag to prevent scaling on mobile
+			if (!document.querySelector('meta[name="viewport"]')) {
+				const meta = document.createElement('meta');
+				meta.name = 'viewport';
+				meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+				document.head.appendChild(meta);
+			}
+			
+			// Prevent default touch behaviors to avoid scrolling while playing
+			document.addEventListener('touchmove', function(e) {
+				if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+					e.preventDefault();
+				}
+			}, { passive: false });
+			
+			// Prevent pinch zoom on mobile
+			document.addEventListener('touchstart', function(e) {
+				if (e.touches.length > 1) {
+					e.preventDefault();
+				}
+			}, { passive: false });
+			
+			// Add touch-action CSS property to body for better touch handling
+			document.body.style.touchAction = 'manipulation';
+			
+			// Detect if device is mobile
+			const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+			
+			// Add mobile class to body if on mobile device
+			if (isMobile) {
+				document.body.classList.add('mobile-device');
+				console.log('Mobile device detected, optimizing for touch');
+				
+				// Add mobile control instructions
+				setTimeout(() => {
+					const mobileHint = document.createElement('div');
+					mobileHint.className = 'mobile-hint';
+					mobileHint.innerHTML = '<div>แตะที่ผีเพื่อจับ</div><div>แตะที่ด้านล่างเพื่อเลื่อนหม้อ</div>';
+					document.getElementById('container').appendChild(mobileHint);
+					
+					// Hide hint after 5 seconds
+					setTimeout(() => {
+						mobileHint.style.opacity = '0';
+						setTimeout(() => mobileHint.remove(), 1000);
+					}, 5000);
+				}, 1000);
+			}
+			// Back button functionality
+			document.getElementById('backButton').addEventListener('click', function() {
+				window.location.href = '/activity.html';
+			});
+			
+			// Score tracking
+			function updateScore(score) {
+				const scoreDisplay = document.querySelector('.score-display');
+				if (!scoreDisplay) {
+					// Create score display if it doesn't exist
+					const newScoreDisplay = document.createElement('div');
+					newScoreDisplay.className = 'score-display';
+					newScoreDisplay.textContent = 'คะแนน: ' + score;
+					document.getElementById('container').appendChild(newScoreDisplay);
+				} else {
+					// Update existing score display
+					scoreDisplay.textContent = 'คะแนน: ' + score;
+				}
+			}
+			class U {}
+			//utilities
+			U.randomFromRange = (min, max) =>
+				Math.floor(Math.random() * (max - min + 1) + min);
+			U.colors = [
+				'#0F5257',
+				'#FF6978',
+				'#A7FFF6',
+				'#507DBC',
+				'#98DFEA',
+				'#69FFF1',
+				'#EEEEEE',
+				'#FFFFFF',
+				'#EEEEEE',
+				'#FFFFFF',
+			];
+			U.translate = (x = 0, y = 0) => `translate(${x}, ${y})`;
+			U.within = (min, target, max) => Math.min(Math.max(min, target), max);
+			U.mouseEventToCoordinate = (mouseEvent) => {
+				return { x: mouseEvent.clientX, y: mouseEvent.clientY };
+			};
+			U.touchEventToCoordinate = touchEvent => {
+				let touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
+				return {
+					x: touch.clientX,
+					y: touch.clientY,
+				};
+			};
+			U.detectSwipe = (startX, endX, minDistance = 50) => {
+				const distance = endX - startX;
+				if (Math.abs(distance) < minDistance) return 0; // No significant swipe
+				return distance > 0 ? 1 : -1; // 1 for right swipe, -1 for left swipe
+			};
+			U.createPath = (points, offset = { x: 0, y: 0 }, percentageContainer) => {
+				let path = '';
+				for (let i = 0; i < points.length; i++) {
+					let p = points[i];
+					path += p.type ? p.type : i == 0 ? '' : ', ';
+					if (percentageContainer)
+						path +=
+							offset.x +
+							(p.x / 100) * percentageContainer.width +
+							' ' +
+							(offset.y + (p.y / 100) * percentageContainer.height);
+					else path += offset.x + p.x + ' ' + (offset.y + p.y);
+				}
+				return path;
+			};
+			class Game {
+				constructor() {
+					this.GAME_LENGTH_SECONDS = 1000;
+					this.PLAYER_SPEED = 12;
+					this.PLAYER_SPEED_STEP = 1;
+					this.width = 0;
+					this.height = 0;
+					this.ghosts = [];
+					this.stagePadding = 20;
+					this.started = false;
+					this.playerCurrentSpeed = 0;
+					this.playerTargetSpeed = 0;
+					this.difficulty = 'easy'; // Default difficulty
+					this.score = 0;
+					this.lives = 3; // Player starts with 3 lives
+					this.currentWave = 1; // Start at wave 1
+					this.ghostsRemainingInWave = 0; // Will be set based on wave number
+					this.isWaveComplete = false; // Flag to track if wave is complete
+					this.goLeft = () => this.setPlayerDirection(-this.PLAYER_SPEED, true);
+					this.stopLeft = () => this.setPlayerDirection(-this.PLAYER_SPEED);
+					this.goRight = () => this.setPlayerDirection(this.PLAYER_SPEED, true);
+					this.stopRight = () => this.setPlayerDirection(this.PLAYER_SPEED);
+
+					this.container = document.getElementById('container');
+					this.stage = Snap('#svg');
+					this.player = new Player(this.stage);
+					this.onResize();
+					this.initializeDifficulty();
+					this.resize = Rx.Observable.fromEvent(window, 'resize');
+					this.resize.subscribe(() => this.onResize());
+					// setup keyboard inputs
+					let keyDowns = Rx.Observable.fromEvent(document, 'keydown');
+					let keyUps = Rx.Observable.fromEvent(document, 'keyup');
+					this.keyPress = keyDowns
+						.merge(keyUps)
+						.filter(
+							(e) =>
+								['arrowright', 'arrowleft', 'a', 'd'].indexOf(
+									e.key.toLowerCase()
+								) >= 0
+						)
+						.groupBy((e) => e.keyCode)
+						.map((group) => group.distinctUntilChanged(null, (e) => e.type))
+						.mergeAll();
+					// setup mouse inputs
+					let mouseDowns = Rx.Observable.fromEvent(document, 'mousedown').map(
+						U.mouseEventToCoordinate
+					);
+					let mouseMoves = Rx.Observable.fromEvent(window, 'mousemove').map(
+						U.mouseEventToCoordinate
+					);
+					let mouseUps = Rx.Observable.fromEvent(window, 'mouseup').map(
+						U.mouseEventToCoordinate
+					);
+					let touchStartX = 0;
+					let touchStartY = 0;
+					
+					let touchStarts = Rx.Observable.fromEvent(document, 'touchstart')
+						.do(e => {
+							const coord = U.touchEventToCoordinate(e);
+							touchStartX = coord.x;
+							touchStartY = coord.y;
+							
+							// If on mobile and touch is in bottom area (pot control area)
+							if (isMobile && this.gameStarted && !this.gameOver && coord.y > this.height * 0.7) {
+								// Prevent default to avoid scrolling
+								e.preventDefault();
+								// Move pot directly to touch position for more responsive controls
+								const newX = Math.max(0, Math.min(this.width - this.player.width, coord.x - this.player.width/2));
+								this.player.setX(newX);
+							}
+						})
+						.map(U.touchEventToCoordinate);
+						
+					let touchMoves = Rx.Observable.fromEvent(document, 'touchmove')
+						.do(e => {
+							const coord = U.touchEventToCoordinate(e);
+							
+							// If on mobile and touch started in bottom area (pot control area)
+							if (isMobile && this.gameStarted && !this.gameOver && touchStartY > this.height * 0.7) {
+								// Prevent default to avoid scrolling
+								e.preventDefault();
+								// Move pot directly to touch position for more responsive controls
+								const newX = Math.max(0, Math.min(this.width - this.player.width, coord.x - this.player.width/2));
+								this.player.setX(newX);
+							}
+						})
+						.map(U.touchEventToCoordinate);
+						
+					let touchEnds = Rx.Observable.fromEvent(window, 'touchend')
+						.do(e => {
+							const coord = U.touchEventToCoordinate(e);
+							// Detect swipe for pot movement
+							if (isMobile && touchStartY > this.height * 0.7) {
+								const swipeDirection = U.detectSwipe(touchStartX, coord.x, 30);
+								if (swipeDirection === 1) {
+									// Right swipe - move pot right
+									this.goRight();
+									setTimeout(() => this.stopRight(), 300);
+								} else if (swipeDirection === -1) {
+									// Left swipe - move pot left
+									this.goLeft();
+									setTimeout(() => this.stopLeft(), 300);
+								}
+							}
+							// Reset touch tracking
+							touchStartX = 0;
+							touchStartY = 0;
+						})
+						.map(U.touchEventToCoordinate);
+					
+					this.mouseDown = mouseDowns.merge(touchStarts);
+					this.mouseMove = mouseMoves.merge(touchMoves);
+					this.mouseUp = mouseUps.merge(touchEnds);
+				}
+				onResize() {
+					this.width = this.container.offsetWidth;
+					this.height = this.container.offsetHeight;
+					this.stage.attr({
+						width: this.width,
+						height: this.height,
+					});
+					
+					// Adjust player position based on device type
+					if (isMobile) {
+						// On mobile, position player slightly higher to account for the pot being raised
+						this.player.setY(this.height - 20);
+					} else {
+						this.player.setY(this.height);
+					}
+					
+					// Adjust UI based on device type
+					this.adjustUIForDevice();
+				}
+				
+				adjustUIForDevice() {
+					// If on mobile, adjust UI elements
+					if (isMobile) {
+						// Add mobile-specific class to body for CSS targeting
+						document.body.classList.add('mobile-device');
+						
+						// Adjust game title to avoid overlap
+						const gameTitle = document.querySelector('.game-title');
+						if (gameTitle) {
+							gameTitle.style.fontSize = '1.2rem';
+						}
+					}
+				}
+				initializeDifficulty() {
+					// Show difficulty modal at the beginning
+					const difficultyModal = document.querySelector('#difficultyModal');
+					difficultyModal.style.display = 'block';
+					
+					// Add event listeners to difficulty buttons
+					const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+					difficultyButtons.forEach(button => {
+						button.addEventListener('click', () => {
+							this.difficulty = button.getAttribute('data-difficulty');
+							difficultyModal.style.display = 'none';
+							
+							// Start countdown before game begins
+							this.startCountdown();
+						});
+					});
+				}
+				
+				createGhosts() {
+					// Clear existing ghosts
+					this.ghosts = [];
+					
+					let pad = this.stagePadding * 2;
+					let baseGhostCount = 5; // Default for easy
+					
+					// Set ghost count based on difficulty
+					if (this.difficulty === 'medium') {
+						baseGhostCount = 8;
+					} else if (this.difficulty === 'hard') {
+						baseGhostCount = 12;
+					}
+					
+					// Increase ghost count based on wave number (add 2 ghosts per wave)
+					let ghostCount = baseGhostCount + ((this.currentWave - 1) * 2);
+					
+					// Set the number of ghosts remaining in this wave
+					this.ghostsRemainingInWave = ghostCount;
+					
+					// Update wave display
+					this.updateWaveDisplay();
+					
+					// Create ghosts
+					for (let i = 0; i < ghostCount; i++) {
+						// Determine if ghost should be red (special)
+						let isRed = false;
+						
+						// Higher chance of red ghosts on higher difficulties and waves
+						let redChance = 0.2;
+						
+						if (this.difficulty === 'medium') {
+							redChance = 0.3;
+						} else if (this.difficulty === 'hard') {
+							redChance = 0.4;
+						}
+						
+						// Increase red ghost chance with each wave (5% per wave)
+						redChance += (this.currentWave - 1) * 0.05;
+						
+						// Cap at 70% chance
+						redChance = Math.min(redChance, 0.7);
+						
+						if (Math.random() < redChance) {
+							isRed = true;
+						}
+						
+						this.ghosts.push(
+							new Ghost(
+								this.stage,
+								this.stagePadding + Math.round(Math.random() * (this.width - pad)),
+								this.stagePadding + Math.round(Math.random() * (this.height * 0.7 - pad)),
+								isRed
+							)
+						);
+					}
+				}
+				
+				updateWaveDisplay() {
+					// Create or update wave display
+					const waveDisplay = document.querySelector('.wave-display');
+					if (!waveDisplay) {
+						// Create wave display if it doesn't exist
+						const newWaveDisplay = document.createElement('div');
+						newWaveDisplay.className = 'wave-display';
+						newWaveDisplay.textContent = 'รอบที่: ' + this.currentWave + ' (ผีเหลือ: ' + this.ghostsRemainingInWave + ')';
+						document.getElementById('container').appendChild(newWaveDisplay);
+					} else {
+						// Update existing wave display
+						waveDisplay.textContent = 'รอบที่: ' + this.currentWave + ' (ผีเหลือ: ' + this.ghostsRemainingInWave + ')';
+					}
+				}
+				
+				updateLivesDisplay() {
+					// Create or update lives display
+					const livesDisplay = document.querySelector('.lives-display');
+					if (!livesDisplay) {
+						// Create lives display if it doesn't exist
+						const newLivesDisplay = document.createElement('div');
+						newLivesDisplay.className = 'lives-display';
+						
+						// Add hearts based on lives count
+						for (let i = 0; i < this.lives; i++) {
+							const heart = document.createElement('span');
+							heart.className = 'heart';
+							heart.textContent = '❤️';
+							newLivesDisplay.appendChild(heart);
+						}
+						
+						document.getElementById('container').appendChild(newLivesDisplay);
+					} else {
+						// Update existing lives display
+						livesDisplay.innerHTML = '';
+						for (let i = 0; i < this.lives; i++) {
+							const heart = document.createElement('span');
+							heart.className = 'heart';
+							heart.textContent = '❤️';
+							livesDisplay.appendChild(heart);
+						}
+					}
+				}
+				
+				startNextWave() {
+					// Increment wave number
+					this.currentWave++;
+					
+					// Show wave complete message
+					const waveComplete = document.createElement('div');
+					waveComplete.className = 'wave-complete';
+					waveComplete.textContent = 'รอบที่ ' + (this.currentWave - 1) + ' สำเร็จ!';
+					document.getElementById('container').appendChild(waveComplete);
+					
+					// Remove the message after animation completes
+					setTimeout(() => {
+						waveComplete.remove();
+						// Create ghosts for the next wave
+						this.createGhosts();
+					}, 2500);
+				}
+				
+				showGameOver() {
+					// Create game over overlay
+					const gameOver = document.createElement('div');
+					gameOver.className = 'game-over';
+					
+					// Add content
+					const title = document.createElement('h2');
+					title.textContent = 'เกมจบแล้ว!';
+					gameOver.appendChild(title);
+					
+					const scoreText = document.createElement('p');
+					scoreText.textContent = 'คะแนนของคุณ: ' + this.score;
+					gameOver.appendChild(scoreText);
+					
+					const waveText = document.createElement('p');
+					waveText.textContent = 'คุณผ่านไปได้ ' + (this.currentWave - 1) + ' รอบ';
+					gameOver.appendChild(waveText);
+					
+					// Add restart button
+					const restartButton = document.createElement('button');
+					restartButton.textContent = 'เล่นอีกครั้ง';
+					restartButton.addEventListener('click', () => {
+						// Remove game over screen
+						gameOver.remove();
+						
+						// Reset game
+						this.lives = 3;
+						this.score = 0;
+						this.currentWave = 1;
+						
+						// Update displays
+						updateScore(0);
+						this.updateLivesDisplay();
+						
+						// Create new ghosts
+						this.createGhosts();
+					});
+					gameOver.appendChild(restartButton);
+					
+					// Add to container
+					document.getElementById('container').appendChild(gameOver);
+				}
+				
+				startCountdown() {
+					// Clear any existing ghosts first
+					this.ghosts.forEach(ghost => {
+						if (ghost && ghost.group) {
+							ghost.group.remove();
+						}
+					});
+					this.ghosts = [];
+					
+					// Create countdown element
+					const countdown = document.createElement('div');
+					countdown.className = 'countdown';
+					countdown.textContent = '3';
+					document.getElementById('container').appendChild(countdown);
+					
+					// Start countdown from 3
+					let count = 3;
+					const countdownInterval = setInterval(() => {
+						count--;
+						if (count > 0) {
+							countdown.textContent = count.toString();
+						} else {
+							countdown.textContent = 'เริ่ม!';
+							// Remove countdown after a short delay
+							setTimeout(() => {
+								countdown.remove();
+								// Create ghosts and start the game only after countdown
+								this.createGhosts();
+								this.start();
+							}, 800);
+							clearInterval(countdownInterval);
+						}
+					}, 1000);
+				}
+				
+				start() {
+					console.log('Game on!');
+					// Reset score
+					this.score = 0;
+					updateScore(0);
+					
+					// Initialize lives display
+					this.updateLivesDisplay();
+					
+					//reset play position
+					this.player.setX((this.width - this.player.width) / 2);
+					this.keyPressSubscription = this.keyPress.subscribe((e) => {
+						let type = e.type === 'keydown' ? 'go' : 'stop';
+						if (['arrowleft', 'a'].indexOf(e.key.toLowerCase()) >= 0) {
+							this[type + 'Left']();
+						}
+						if (['arrowright', 'd'].indexOf(e.key.toLowerCase()) >= 0) {
+							this[type + 'Right']();
+						}
+					});
+					this.mouseDownSubscription = this.mouseDown.subscribe((e) => {
+						if (this.stream) this.stream.kill();
+						this.stream = new Stream(this.stage);
+						this.stream.setTarget(e);
+					});
+					this.mouseMoveSubscription = this.mouseMove.subscribe((e) => {
+						if (this.stream) this.stream.setTarget(e);
+						if (this.caughtGhost) this.caughtGhost.setTarget(e);
+					});
+					this.mouseUpSubscription = this.mouseUp.subscribe((e) => {
+						if (this.stream) this.stream.kill();
+						// Check if ghost is near the pot (bottom center of screen)
+						if (this.caughtGhost) {
+							const potX = this.width / 2;
+							const potY = this.height - 40;
+							const ghostX = this.caughtGhost.x + this.caughtGhost.width / 2;
+							const ghostY = this.caughtGhost.y + this.caughtGhost.height / 2;
+							
+							// Calculate distance to pot
+							const distance = Math.sqrt(Math.pow(ghostX - potX, 2) + Math.pow(ghostY - potY, 2));
+							
+							// If ghost is close to pot, add score
+							if (distance < 100) {
+								// Determine points based on ghost type
+								const points = this.caughtGhost.isRed ? 3 : 1;
+								
+								// Show ghost caught message
+								const ghostCaught = document.createElement('div');
+								ghostCaught.className = 'ghost-caught';
+								ghostCaught.textContent = '+' + points;
+								ghostCaught.style.color = this.caughtGhost.isRed ? '#FF6978' : 'white';
+								this.container.appendChild(ghostCaught);
+								
+								// Add animation to pot
+								const pot = document.querySelector('.pot');
+								pot.classList.add('score-animation');
+								setTimeout(() => {
+									pot.classList.remove('score-animation');
+								}, 500);
+								
+								// Remove the message after animation completes
+								setTimeout(() => {
+									ghostCaught.remove();
+								}, 1000);
+								
+								// Update score
+								this.score += points;
+								updateScore(this.score);
+								
+								// Make the ghost disappear
+								const ghostIndex = this.ghosts.indexOf(this.caughtGhost);
+								if (ghostIndex > -1) {
+									// Remove ghost from the array
+									this.ghosts.splice(ghostIndex, 1);
+									
+									// Remove ghost SVG elements
+									this.caughtGhost.group.remove();
+								}
+								
+								// Decrease ghosts remaining in wave
+								this.ghostsRemainingInWave--;
+								
+								// Update wave display
+								this.updateWaveDisplay();
+								
+								// Check if wave is complete
+								if (this.ghostsRemainingInWave <= 0) {
+									// Start next wave
+									this.startNextWave();
+								}
+							} else {
+								// Ghost missed the pot - lose a life
+								this.lives--;
+								
+								// Update lives display
+								this.updateLivesDisplay();
+								
+								// Check if game over
+								if (this.lives <= 0) {
+									this.showGameOver();
+								}
+							}
+							
+							this.caughtGhost.clearTarget();
+						}
+						this.caughtGhost = null;
+						this.stream = null;
+					});
+					window.requestAnimationFrame((t) => {
+						this.tick(t);
+					});
+				}
+				setPlayerDirection(direction, go = false) {
+					if (go) this.playerTargetSpeed = direction;
+					else if (this.playerTargetSpeed == direction)
+						this.playerTargetSpeed = 0;
+				}
+				end() {
+					console.warn('Game over');
+					if (this.keyPressSubscription)
+						this.keyPressSubscription.unsubscribe();
+					if (this.mouseDownSubscription)
+						this.mouseDownSubscription.unsubscribe();
+					if (this.mouseMoveSubscription)
+						this.mouseMoveSubscription.unsubscribe();
+					if (this.mouseUpSubscription) this.mouseUpSubscription.unsubscribe();
+				}
+				tick(timestamp) {
+					if (!this.startTimestamp) this.startTimestamp = timestamp;
+					let progress = timestamp - this.startTimestamp;
+					if (this.playerCurrentSpeed > this.playerTargetSpeed)
+						this.playerCurrentSpeed -= this.PLAYER_SPEED_STEP;
+					if (this.playerCurrentSpeed < this.playerTargetSpeed)
+						this.playerCurrentSpeed += this.PLAYER_SPEED_STEP;
+					let targetX = this.player.x + this.playerCurrentSpeed;
+					let actualX = U.within(0, targetX, this.width - this.player.width);
+					this.player.setX(actualX);
+					if (this.stream)
+						this.stream.setStart({
+							x: actualX + this.player.width / 2,
+							y: this.player.y + this.player.height / 3,
+						});
+					if (targetX != actualX) {
+						let bounceBackSpeed = this.playerCurrentSpeed / 2;
+						this.playerCurrentSpeed = Math.round(
+							bounceBackSpeed - bounceBackSpeed * 2
+						);
+					}
+					if (!this.caughtGhost && this.stream) {
+						for (let i = 0; i < this.ghosts.length; i++) {
+							let ghost = this.ghosts[i];
+							if (ghost.isHit({ x: this.stream.x, y: this.stream.y })) {
+								this.caughtGhost = ghost;
+								this.caughtGhost.setTarget({
+									x: this.stream.x,
+									y: this.stream.y,
+								});
+								break;
+							}
+						}
+					}
+					for (let i = 0; i < this.ghosts.length; i++) {
+						this.ghosts[i].draw();
+					}
+					if (this.caughtGhost && this.stream) {
+						this.stream.setSticky(
+							{ x: this.caughtGhost.x, y: this.caughtGhost.y },
+							this.caughtGhost.radius
+						);
+					}
+					this.player.draw();
+					if (this.stream) this.stream.draw();
+					// if (progress < (1000 * this.GAME_LENGTH_SECONDS)) window.requestAnimationFrame((t:number) => {this.tick(t)});
+					// else this.end();
+					window.requestAnimationFrame((t) => {
+						this.tick(t);
+					});
+				}
+			}
+			class Ghost {
+				constructor(svg, x = 0, y = 0, isRed = false) {
+					this.lightningLines = [];
+					this.x = 0;
+					this.y = 0;
+					this.count = 0;
+					this.lerp = 20;
+					this.boltCount = 4;
+					this.boltRadius = 40;
+					this.isRed = isRed; // Flag to determine if this is a red ghost (worth 3 points)
+					this.bodyPoints = [
+						{ type: 'M', x: 50, y: 0 },
+						{ type: 'Q', x: 100, y: 0 },
+						{ x: 100, y: 50 },
+						{ type: 'L', x: 100, y: 100 },
+						{ x: 84, y: 90 },
+						{ x: 68, y: 100 },
+						{ x: 52, y: 90 },
+						{ x: 36, y: 100 },
+						{ x: 20, y: 90 },
+						{ x: 0, y: 100 },
+						{ x: 0, y: 50 },
+						{ type: 'Q', x: 0, y: 0 },
+						{ x: 50, y: 0 },
+					];
+					this.eyePoints = [
+						{ type: 'M', x: 10, y: 0 },
+						{ type: 'Q', x: 20, y: 0 },
+						{ x: 20, y: 10 },
+						{ x: 20, y: 20 },
+						{ x: 10, y: 20 },
+						{ x: 0, y: 20 },
+						{ x: 0, y: 10 },
+						{ x: 0, y: 0 },
+						{ x: 10, y: 0 },
+					];
+					this.eyePointsShocked = [
+						{ type: 'M', x: 15, y: 0 },
+						{ type: 'Q', x: 30, y: 0 },
+						{ x: 30, y: 15 },
+						{ x: 30, y: 30 },
+						{ x: 15, y: 30 },
+						{ x: 0, y: 30 },
+						{ x: 0, y: 15 },
+						{ x: 0, y: 0 },
+						{ x: 15, y: 0 },
+					];
+					this.hitPoints = [
+						{ type: 'M', x: 0, y: 0 },
+						{ type: 'L', x: 100, y: 0 },
+						{ x: 100, y: 100 },
+						{ x: 0, y: 100 },
+					];
+					let random = Math.round(Math.random() * 10);
+					this.width = 40 + random;
+					this.height = 55 + random;
+					this.svg = svg;
+					this.x = x;
+					this.y = y;
+					this.group = this.svg.group();
+					this.count = Math.random() * 100;
+					this.body = this.group.path();
+					this.body.attr({ fill: this.isRed ? '#FF6978' : 'white', fillOpacity: 0.9 });
+					this.rightEye = this.group.path();
+					this.rightEye.attr({ fill: 'black' });
+					this.leftEye = this.group.path();
+					this.leftEye.attr({ fill: 'black' });
+					this.blurLines = this.group.group();
+					this.sharpLines = this.group.group();
+					this.blurFilter = this.svg.filter(Snap.filter.blur(7, 7));
+					this.blurLines.attr({ filter: this.blurFilter });
+					for (let i = 0; i < this.boltCount; i++) {
+						let line =
+							i % 2 == 0 ? this.sharpLines.path() : this.blurLines.path();
+						line.attr({
+							fill: 'none',
+							strokeLinecap: 'round',
+							strokeOpacity: i % 2 == 0 ? 0.8 : 1,
+						});
+						this.lightningLines.push(line);
+					}
+					this.hitPath = this.group.path();
+					this.hitPath.attr({ fill: 'red', fillOpacity: 0 });
+					this.draw();
+				}
+				isHit(point) {
+					return Snap.path.isPointInside(
+						this.hitPath.attr('d'),
+						point.x,
+						point.y
+					);
+				}
+				setTarget(position, streamStart) {
+					this.target = position;
+					this.streamStart = streamStart;
+					this.setXYFromTarget();
+				}
+				clearTarget() {
+					this.target = null;
+				}
+				setXYFromTarget() {
+					this.x += (this.target.x - this.x) / this.lerp;
+					this.y += (this.target.y - this.y) / this.lerp;
+				}
+				draw() {
+					// Get the container dimensions
+					const container = document.getElementById('container');
+					const containerWidth = container.offsetWidth;
+					const containerHeight = container.offsetHeight;
+					// Use smaller padding on mobile devices
+					const padding = containerWidth < 768 ? 30 : 50; // Smaller padding on mobile
+					
+					if (this.target) {
+						this.setXYFromTarget();
+					} else {
+						// Ensure ghosts always move when not being dragged
+						this.count += 0.1;
+						this.x += Math.sin(this.count * 0.5) * 1.5;
+						this.y += Math.cos(this.count * 0.1) * 1.5;
+						
+						// Add some random movement to make ghosts more lively
+						if (Math.random() < 0.05) {
+							this.x += U.randomFromRange(-5, 5);
+							this.y += U.randomFromRange(-5, 5);
+						}
+						
+						// Check boundaries and bounce if needed
+						if (this.x < padding) {
+							this.x = padding;
+							this.count += Math.PI; // Change direction
+						}
+						if (this.x > containerWidth - padding) {
+							this.x = containerWidth - padding;
+							this.count += Math.PI; // Change direction
+						}
+						if (this.y < padding) {
+							this.y = padding;
+							this.count += Math.PI; // Change direction
+						}
+						if (this.y > containerHeight - padding * 2) { // Extra padding at bottom for pot
+							this.y = containerHeight - padding * 2;
+							this.count += Math.PI; // Change direction
+						}
+					}
+					let _x = this.target ? this.x + U.randomFromRange(-2, 2) : this.x;
+					let _y = this.target ? this.y + U.randomFromRange(-2, 2) : this.y;
+					this.hitPath.attr({
+						d: U.createPath(
+							this.hitPoints,
+							{ x: _x - this.width / 2, y: _y - this.height / 2 },
+							{ width: this.width, height: this.height }
+						),
+					});
+					this.body.attr({
+						d: U.createPath(
+							this.bodyPoints,
+							{ x: _x - this.width / 2, y: _y - this.height / 2 },
+							{ width: this.width, height: this.height }
+						),
+					});
+					this.rightEye.attr({
+						d: U.createPath(
+							this.target ? this.eyePointsShocked : this.eyePoints,
+							{ x: _x + this.width / 4 - 8, y: _y - this.height / 4 },
+							{ width: this.width, height: this.height }
+						),
+					});
+					this.leftEye.attr({
+						d: U.createPath(
+							this.target ? this.eyePointsShocked : this.eyePoints,
+							{ x: _x - this.width / 4, y: _y - this.height / 4 },
+							{ width: this.width, height: this.height }
+						),
+					});
+					for (let i = 0; i < this.lightningLines.length; i++) {
+						let lineString = '';
+						if (this.target) {
+							let points = 18;
+							let randomOffset = 4;
+							for (let j = 0; j < points; j++) {
+								let rand = Math.random() * points;
+								let x =
+									this.x +
+									U.randomFromRange(-randomOffset, randomOffset) +
+									this.boltRadius * Math.cos((2 * Math.PI * j) / points);
+								let y =
+									this.y +
+									U.randomFromRange(-randomOffset, randomOffset) +
+									this.boltRadius * Math.sin((2 * Math.PI * j) / points);
+								lineString += (j == 0 ? 'M ' : ' L ') + x + ' ' + y;
+							}
+							lineString += 'Z';
+						}
+						this.lightningLines[i].attr({
+							d: lineString,
+							stroke: U.colors[Math.floor(Math.random() * U.colors.length)],
+							strokeWidth: Math.random() * 3,
+						});
+					}
+				}
+			}
+			class Player {
+				constructor(svg) {
+					this.speedChangeX = [0];
+					this.x = 0;
+					this.y = 0;
+					this.width = 60;
+					this.height = 60;
+					this.setX = (newX) => {
+						this.speedChangeX.push(this.x - newX);
+						if (this.speedChangeX.length > 3) this.speedChangeX.shift();
+						this.x = newX;
+						let inertia = this.speedChangeX.reduce((a, b) => a + b, 0) / 2;
+					};
+					this.setY = (newY) => (this.y = newY - this.height);
+					this.svg = svg;
+					this.group = this.svg.group();
+				}
+				draw() {
+					this.group.attr({ transform: U.translate(this.x, this.y) });
+				}
+			}
+			class Stream {
+				constructor(svg) {
+					this.x = 0;
+					this.y = 0;
+					this.bX = 0;
+					this.bY = 0;
+					this.targetLerp = 40;
+					this.bezierLerp = 6;
+					this.lightningLines = [];
+					this.count = 0;
+					this.boltCount = 20;
+					this.boltPointSpace = 10;
+					this.drawGuides = function () {
+						this.targetBezierCircle.attr({
+							cx:
+								Math.sin(this.count * 0.15) * 20 +
+								(this.start.x +
+									(this.target.x - this.start.x) / this.bezierLerp),
+							cy:
+								Math.cos(this.count * 0.15) * 20 +
+								(this.start.y +
+									(this.target.y - this.start.y) / this.bezierLerp),
+						});
+						this.targetCircle.attr({
+							cx: this.target.x,
+							cy: this.target.y,
+						});
+					};
+					this.svg = svg;
+					this.group = this.svg.group();
+					this.blurLines = this.group.group();
+					this.sharpLines = this.group.group();
+					this.blurFilter = this.svg.filter(Snap.filter.blur(7, 7));
+					this.blurLines.attr({ filter: this.blurFilter });
+					this.primaryLine = this.blurLines.path();
+					this.primaryLine.attr({
+						fill: 'none',
+						stroke: '#0F5257',
+						strokeOpacity: 0.2,
+						strokeLinecap: 'round',
+						strokeWidth: 15,
+					});
+					this.targetBezierCircle = this.group.circle(-5, -5, 5);
+					this.targetBezierCircle.attr({
+						fill: 'red',
+					});
+					this.targetCircle = this.group.circle(-5, -5, 5);
+					this.targetCircle.attr({
+						fill: 'red',
+					});
+					for (let i = 0; i < this.boltCount; i++) {
+						let line =
+							i % 2 == 0 ? this.sharpLines.path() : this.blurLines.path();
+						line.attr({
+							fill: 'none',
+							strokeLinecap: 'round',
+							strokeOpacity: i % 2 == 0 ? 0.8 : 1,
+						});
+						this.lightningLines.push(line);
+					}
+				}
+				setTarget(newTarget) {
+					this.target = newTarget;
+				}
+				setStart(newStart) {
+					this.start = newStart;
+					if (!this.x || !this.y) {
+						this.x = this.bX = this.start.x;
+						this.y = this.bY = this.start.y;
+					}
+				}
+				setSticky(newSticky) {
+					this.sX = newSticky.x;
+					this.sY = newSticky.y;
+				}
+				draw() {
+					if (this.start && this.target) {
+						++this.count;
+						this.targetLerp = this.targetLerp > 10 ? this.targetLerp - 3 : 10;
+						this.bezierLerp =
+							this.bezierLerp > 1.5 ? this.bezierLerp - 0.2 : 1.5;
+						if (this.sX == null) {
+							this.x += (this.target.x - this.x) / this.targetLerp;
+							this.y += (this.target.y - this.y) / this.targetLerp;
+						} else {
+							this.x = this.sX;
+							this.y = this.sY;
+						}
+						this.bX +=
+							Math.sin(this.count * (this.sX ? 0.17 : 0.15)) *
+								(this.sX ? 30 : 40) +
+							(this.start.x +
+								(this.target.x - this.start.x) / this.bezierLerp -
+								this.bX);
+						this.bY +=
+							Math.cos(this.count * (this.sX ? 0.17 : 0.15)) *
+								(this.sX ? 30 : 40) +
+							(this.start.y +
+								(this.target.y - this.start.y) / this.bezierLerp -
+								this.bY);
+						//this.drawGuides();
+						let startString = 'M' + this.start.x + ' ' + this.start.y;
+						let bezierString = 'Q' + this.bX + ' ' + this.bY;
+						let targetString = ' ' + this.x + ' ' + this.y;
+						this.primaryLine.attr({
+							d: startString + bezierString + targetString,
+						});
+						let spaces = this.boltPointSpace;
+						let pointAt = 0;
+						let length = this.primaryLine.getTotalLength();
+						let points = [];
+						while (pointAt < length) {
+							pointAt += spaces;
+							points.push(this.primaryLine.getPointAtLength(pointAt));
+						}
+						for (let i = 0; i < this.lightningLines.length; i++) {
+							let lineString = 'M' + this.start.x + ' ' + this.start.y;
+							for (let j = 0; j < points.length; j++) {
+								let rand =
+									((this.boltPointSpace + 5) / this.lightningLines.length) * i;
+								let x =
+									points[j].x +
+									Math.random() *
+										Math.sin(this.count * j) *
+										(rand - (rand / points.length) * j);
+								let y =
+									points[j].y +
+									Math.random() *
+										Math.cos(this.count * j) *
+										(rand - (rand / points.length) * j);
+								lineString += ' ' + x + ' ' + y;
+							}
+							this.lightningLines[i].attr({
+								d: lineString,
+								stroke: U.colors[Math.floor(Math.random() * U.colors.length)],
+								strokeWidth: Math.random() * (this.sX ? 3 : 1),
+							});
+						}
+					}
+				}
+				kill() {
+					let spaces = 50;
+					let pointAt = 0;
+					let length = this.primaryLine.getTotalLength();
+					let points = [];
+					while (pointAt < length) {
+						pointAt += spaces;
+						points.push(this.primaryLine.getPointAtLength(pointAt));
+					}
+					this.primaryLine.animate({ strokeOpacity: 0, strokeWidth: 1 }, 1000);
+					setTimeout(() => this.group.remove(), 1000);
+					if (points.length) {
+						for (let i = 0; i < this.lightningLines.length; i++) {
+							let lineString = 'M' + this.start.x + ' ' + this.start.y;
+							for (let j = 0; j < points.length; j++) {
+								let rand = (100 / this.lightningLines.length) * i;
+								let x =
+									points[j].x +
+									Math.random() *
+										Math.sin(this.count * j) *
+										(rand - (rand / points.length) * j);
+								let y =
+									points[j].y +
+									Math.random() *
+										Math.cos(this.count * j) *
+										(rand - (rand / points.length) * j);
+								lineString += ' ' + x + ' ' + y;
+							}
+							this.lightningLines[i].animate(
+								{ d: lineString, strokeOpacity: 0, strokeWidth: 1 },
+								500
+							);
+						}
+					}
+				}
+			}
+			let game = new Game();
+			game.start();
+		</script>
+	</body>
+</html>

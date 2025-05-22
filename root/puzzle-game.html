@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมปริศนา</title>
+    <link rel="icon" type="icon" href="/img/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .game-info {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .back-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .puzzle-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .puzzle-question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .puzzle-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .puzzle-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .puzzle-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .puzzle-option.correct {
+            background: rgba(46, 213, 115, 0.7);
+        }
+        
+        .puzzle-option.incorrect {
+            background: rgba(255, 71, 87, 0.7);
+        }
+        
+        .puzzle-feedback {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            min-height: 30px;
+        }
+        
+        .next-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .next-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <button class="back-button" id="backButton">← กลับ</button>
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="info-label">คำถามที่</span>
+                    <span class="info-value" id="questionNumber">1/5</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">คะแนน</span>
+                    <span class="info-value" id="score">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="puzzle-container">
+            <div class="puzzle-question" id="question">คำถามจะปรากฏที่นี่</div>
+            <div class="puzzle-options" id="options">
+                <!-- Options will be generated here -->
+            </div>
+            <div class="puzzle-feedback" id="feedback"></div>
+            <button class="next-button" id="nextButton">ข้อถัดไป</button>
+        </div>
+    </div>
+
+    <script>
+        // Puzzle questions and answers
+        const puzzles = [
+            {
+                question: "ฉันมีตา แต่มองไม่เห็น ฉันคืออะไร?",
+                options: ["เข็ม", "ตาชั่ง", "ตาน้ำ", "ตาข่าย"],
+                answer: 0
+            },
+            {
+                question: "ยิ่งเอาออกยิ่งใหญ่ขึ้น คืออะไร?",
+                options: ["หลุม", "ถ้ำ", "บ่อ", "อุโมงค์"],
+                answer: 0
+            },
+            {
+                question: "สิ่งที่คนรวยต้องการ คนจนมี คืออะไร?",
+                options: ["ความสุข", "ความรัก", "ไม่มีอะไร", "เงิน"],
+                answer: 2
+            },
+            {
+                question: "ฉันเดินไปข้างหน้าแต่ถอยหลังได้เร็วกว่า ฉันคืออะไร?",
+                options: ["ปู", "กุ้ง", "กบ", "แมงมุม"],
+                answer: 0
+            },
+            {
+                question: "มีอะไรที่คุณสามารถจับได้แต่ไม่สามารถโยนได้?",
+                options: ["เงา", "น้ำ", "ความร้อน", "ไอน้ำ"],
+                answer: 0
+            }
+        ];
+        
+        // Game variables
+        let currentPuzzle = 0;
+        let score = 0;
+        let canAnswer = true;
+        
+        // DOM elements
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const nextButton = document.getElementById('nextButton');
+        const scoreElement = document.getElementById('score');
+        const questionNumberElement = document.getElementById('questionNumber');
+        const backButton = document.getElementById('backButton');
+        
+        // Initialize game
+        function initGame() {
+            loadPuzzle(currentPuzzle);
+            updateQuestionNumber();
+        }
+        
+        // Load puzzle
+        function loadPuzzle(index) {
+            if (index >= puzzles.length) {
+                // Game over
+                questionElement.textContent = `เกมจบแล้ว! คะแนนของคุณคือ ${score}/${puzzles.length}`;
+                optionsElement.innerHTML = '';
+                feedbackElement.textContent = 'ขอบคุณที่เล่นเกมปริศนา!';
+                nextButton.style.display = 'none';
+                return;
+            }
+            
+            const puzzle = puzzles[index];
+            questionElement.textContent = puzzle.question;
+            optionsElement.innerHTML = '';
+            feedbackElement.textContent = '';
+            nextButton.style.display = 'none';
+            canAnswer = true;
+            
+            // Create option buttons
+            puzzle.options.forEach((option, i) => {
+                const button = document.createElement('button');
+                button.className = 'puzzle-option';
+                button.textContent = option;
+                button.dataset.index = i;
+                button.addEventListener('click', checkAnswer);
+                optionsElement.appendChild(button);
+            });
+            
+            updateQuestionNumber();
+        }
+        
+        // Check answer
+        function checkAnswer(event) {
+            if (!canAnswer) return;
+            
+            const selectedIndex = parseInt(event.target.dataset.index);
+            const correctIndex = puzzles[currentPuzzle].answer;
+            
+            // Disable further answers
+            canAnswer = false;
+            
+            // Mark correct and incorrect options
+            const options = document.querySelectorAll('.puzzle-option');
+            options.forEach((option, index) => {
+                if (index === correctIndex) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Update score and feedback
+            if (selectedIndex === correctIndex) {
+                score++;
+                scoreElement.textContent = score;
+                feedbackElement.textContent = 'ถูกต้อง! 🎉';
+            } else {
+                feedbackElement.textContent = 'ไม่ถูกต้อง 😢 คำตอบที่ถูกคือ: ' + puzzles[currentPuzzle].options[correctIndex];
+            }
+            
+            // Show next button
+            nextButton.style.display = 'block';
+        }
+        
+        // Update question number display
+        function updateQuestionNumber() {
+            questionNumberElement.textContent = `${currentPuzzle + 1}/${puzzles.length}`;
+        }
+        
+        // Event listeners
+        nextButton.addEventListener('click', () => {
+            currentPuzzle++;
+            loadPuzzle(currentPuzzle);
+        });
+        
+        backButton.addEventListener('click', () => {
+            window.location.href = '/activity.html';
+        });
+        
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>
