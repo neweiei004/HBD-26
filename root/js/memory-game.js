@@ -62,15 +62,22 @@ document.addEventListener('DOMContentLoaded', () => {
     gameContainer.appendChild(gameBoard);
     gameContainer.appendChild(closeButton);
 
-    // Card images - replace with your own image paths
-    const cardImages = [
+    // Card images - we'll select based on difficulty
+    const allCardImages = [
         '/img/memory/1.jpg',
         '/img/memory/2.jpg',
         '/img/memory/3.jpg',
         '/img/memory/4.jpg',
         '/img/memory/5.jpg',
         '/img/memory/6.jpg',
+        '/img/memory/7.jpg',
+        '/img/memory/8.jpg',
+        '/img/memory/9.jpg',
+        '/img/memory/10.jpg',
     ];
+    
+    // Select card images based on difficulty
+    const cardImages = allCardImages.slice(0, currentDifficulty.pairs);
 
     // Duplicate the images to create pairs
     const cards = [...cardImages, ...cardImages];
@@ -85,6 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let seconds = 0;
     let timer;
 
+    // Clear existing cards
+    gameBoard.innerHTML = '';
+    
+    // Update moves counter
+    moves = 0;
+    movesElement.textContent = `Moves: ${moves}`;
+    
     // Create cards
     cards.forEach((card, index) => {
         const cardElement = document.createElement('div');
@@ -183,30 +197,60 @@ document.addEventListener('DOMContentLoaded', () => {
         [firstCard, secondCard] = [null, null];
     }
     
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+    
     function checkWin() {
         const allCards = document.querySelectorAll('.memory-card');
         const matchedCards = document.querySelectorAll('.memory-card.flip');
         
         if (allCards.length === matchedCards.length) {
-            clearInterval(timer);
+            clearInterval(gameTimer);
+            gameActive = false;
+            
+            // Calculate score based on time and moves
+            const timeBonus = Math.max(0, Math.floor(timeLeft / 10));
+            const moveBonus = Math.max(0, 50 - moves);
+            const difficultyMultiplier = {
+                'easy': 1,
+                'normal': 1.5,
+                'hard': 2
+            }[currentDifficulty.name] || 1;
+            
+            const score = Math.max(10, (timeBonus + moveBonus) * difficultyMultiplier);
+            
             setTimeout(() => {
-                alert(`Congratulations! You won in ${moves} moves and ${seconds} seconds!`);
-                // Add points to user's account
-                // You can implement this part based on your needs
+                alert(`ยินดีด้วย! คุณชนะใน ${moves} ครั้ง ใช้เวลา ${formatTime(currentDifficulty.timeLimit - timeLeft)}!\n\nคะแนนที่ได้: ${Math.round(score)}`);
+                // You can add score saving logic here
             }, 500);
         }
     }
+    
+    // Add the game container to the document
+    document.body.appendChild(gameContainer);
     
     // Add styles
     const style = document.createElement('style');
     style.textContent = `
         .memory-card {
-            width: 100px;
-            height: 100px;
             position: relative;
+            width: 100%;
+            aspect-ratio: 1;
             transform-style: preserve-3d;
             transition: transform 0.5s;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .memory-card.flip {
@@ -220,13 +264,77 @@ document.addEventListener('DOMContentLoaded', () => {
             height: 100%;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        
+        .front-face {
+            background: #6b5b95;
+            color: white;
+            font-size: 24px;
+            transform: rotateY(0deg);
         }
         
         .back-face {
+            background: white;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             transform: rotateY(180deg);
+        }
+        
+        @media (max-width: 768px) {
+            .memory-card {
+                width: calc((100vw - 80px) / 4);
+                height: calc((100vw - 80px) / 4);
+            }
+            
+            .front-face,
+            .back-face {
+                font-size: 18px;
+            }
+            
+            #moves, #timer {
+                font-size: 14px;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .memory-card {
+                width: 100px;
+                height: 100px;
+            }
         }
     `;
     
+    // Add the styles to the document
     document.head.appendChild(style);
-    document.body.appendChild(gameContainer);
+    
+    // Prevent zooming on double-tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+    // Prevent scrolling when touching the game
+    gameContainer.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, { passive: false });
+    
+    // Force viewport update on orientation change
+    window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+            const viewport = document.querySelector('meta[name=viewport]');
+            if (viewport) {
+                viewport.content = viewport.content;
+            }
+        }, 100);
+    });
 });

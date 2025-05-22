@@ -12,6 +12,211 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/activity.css">
+    <link rel="stylesheet" href="/css/memory-game.css">
+    <style>
+        /* Difficulty Modal Styles */
+        .difficulty-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            color: white;
+            font-family: 'Kanit', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.8rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-subtitle {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .difficulty-modal h3 {
+            margin-top: 0;
+            color: #d23669;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .difficulty-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .difficulty-btn {
+            position: relative;
+            padding: 1.2rem 1.5rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: white;
+            text-align: left;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .difficulty-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .difficulty-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .difficulty-btn:active {
+            transform: translateY(2px);
+        }
+
+        .difficulty-btn.easy {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+
+        .difficulty-btn.normal {
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+        }
+
+        .difficulty-btn.hard {
+            background: linear-gradient(135deg, #F44336, #E91E63);
+        }
+        
+        .difficulty-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .difficulty-name {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .difficulty-desc {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .difficulty-btn:active {
+            transform: translateY(0);
+        }
+
+        .difficulty-info {
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1rem;
+            backdrop-filter: blur(5px);
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .close-btn:hover {
+            background: #a51d4a;
+            transform: translateY(-2px);
+        }
+
+        
+        /* Make sure the modal is on top of other content */
+        #difficultyOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1500;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .difficulty-modal {
+                width: 90%;
+                padding: 1.8rem 1.2rem;
+                border-radius: 15px;
+            }
+            
+            .modal-header h3 {
+                font-size: 1.5rem;
+            }
+            
+            .difficulty-btn {
+                padding: 1rem 1.2rem;
+                border-radius: 12px;
+            }
+            
+            .difficulty-icon {
+                font-size: 1.5rem;
+            }
+            
+            .difficulty-name {
+                font-size: 1.2rem;
+            }
+            
+            .difficulty-desc {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
     <script>
         // Check if user is coming directly to activity.html without going through login
         if (!sessionStorage.getItem('authenticated')) {
@@ -26,7 +231,7 @@
     <script>
         // Set up background music
         const backgroundMusic = document.getElementById('backgroundMusic');
-        backgroundMusic.volume = 0.08; // Set volume to 17%
+        backgroundMusic.volume = 0.20; // Set volume to 20%
         backgroundMusic.play(); // Start playing the music
     </script>
 
@@ -42,7 +247,7 @@
             <h1 class="activity-title">กิจกรรม 🎮</h1>
             
             <div class="activity-grid">
-                <div class="activity-card" style="cursor: pointer;">
+                <div class="activity-card" id="memoryGameCard" style="cursor: pointer;">
                     <div class="activity-icon">🃏</div>
                     <h2 class="activity-name">เกมจับคู่ภาพ</h2>
                     <p class="activity-description">จับคู่ภาพให้เร็วที่สุด เพื่อรับแต้มแลกของขวัญ</p>
@@ -107,13 +312,123 @@
         </div>
     </div>
 
-    <script src="/js/memory-game.js"></script>
+    <script src="/js/memory-game-new.js"></script>
+    <!-- Memory Game Difficulty Modal -->
+    <div class="popup-overlay" id="difficultyOverlay"></div>
+    <div class="difficulty-modal" id="difficultyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎮 เลือกระดับความยาก</h3>
+                <p class="modal-subtitle">เลือกความยากที่ต้องการเล่น</p>
+            </div>
+            <div class="difficulty-options">
+                <button class="difficulty-btn easy" data-difficulty="easy">
+                    <span class="difficulty-icon">😊</span>
+                    <span class="difficulty-name">ง่าย</span>
+                    <span class="difficulty-desc">3 นาที | 6 คู่</span>
+                </button>
+                <button class="difficulty-btn normal" data-difficulty="normal">
+                    <span class="difficulty-icon">😎</span>
+                    <span class="difficulty-name">ปานกลาง</span>
+                    <span class="difficulty-desc">2 นาที | 8 คู่</span>
+                </button>
+                <button class="difficulty-btn hard" data-difficulty="hard">
+                    <span class="difficulty-icon">🔥</span>
+                    <span class="difficulty-name">ยาก</span>
+                    <span class="difficulty-desc">1 นาที | 10 คู่</span>
+                </button>
+            </div>
+            <div class="difficulty-info">
+                <p id="difficultyDescription">เลือกระดับความยากเพื่อเริ่มเกม</p>
+            </div>
+            <button class="close-btn" id="closeDifficultyModal">ปิด</button>
+        </div>
+    </div>
+
     <script>
         // --- Popup Interaction Logic ---
 
         // Get references to popup elements
         const checkinCard = document.getElementById('dailyCheckinCard');
-        const memoryGameCard = document.querySelector('.activity-card:first-child');
+        const memoryGameCard = document.getElementById('memoryGameCard');
+        const difficultyModal = document.getElementById('difficultyModal');
+        const difficultyOverlay = document.getElementById('difficultyOverlay');
+        const closeDifficultyModal = document.getElementById('closeDifficultyModal');
+        const difficultyDescription = document.getElementById('difficultyDescription');
+        
+        // Difficulty settings
+        const difficultySettings = {
+            easy: {
+                name: 'ง่าย',
+                description: 'เวลา 3 นาที',
+                timeLimit: 180, // 3 minutes in seconds
+                pairs: 6
+            },
+            normal: {
+                name: 'ปานกลาง',
+                description: 'เวลา 2 นาที',
+                timeLimit: 120, // 2 minutes in seconds
+                pairs: 8
+            },
+            hard: {
+                name: 'ยาก',
+                description: 'เวลา 1 นาที',
+                timeLimit: 60, // 1 minute in seconds
+                pairs: 10
+            }
+        };
+        
+        // Show difficulty modal
+        function showDifficultyModal() {
+            difficultyModal.style.display = 'block';
+            difficultyOverlay.style.display = 'block';
+        }
+        
+        // Hide difficulty modal
+        function hideDifficultyModal() {
+            difficultyModal.style.display = 'none';
+            difficultyOverlay.style.display = 'none';
+        }
+        
+        // Handle difficulty selection
+        document.querySelectorAll('.difficulty-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const difficulty = this.dataset.difficulty;
+                const settings = difficultySettings[difficulty];
+                difficultyDescription.textContent = `ระดับ ${settings.name}: ${settings.description}`;
+                
+                // Start game with selected difficulty
+                startMemoryGame(settings);
+                hideDifficultyModal();
+            });
+        });
+        
+        // Start game with selected difficulty
+        function startMemoryGame(settings) {
+            // Add loading state
+            const originalText = memoryGameCard.innerHTML;
+            memoryGameCard.innerHTML = '<div style="margin: 20px 0; font-size: 1.2rem;">กำลังโหลดเกม...</div>';
+            
+            // Initialize memory game with difficulty settings after a short delay
+            setTimeout(() => {
+                if (window.initializeMemoryGame) {
+                    window.initializeMemoryGame(settings);
+                } else {
+                    alert('เกิดข้อผิดพลาดในการโหลดเกม กรุณาลองใหม่อีกครั้ง');
+                    memoryGameCard.innerHTML = originalText;
+                }
+            }, 500);
+        }
+        
+        // Close modal when clicking close button or overlay
+        closeDifficultyModal.addEventListener('click', hideDifficultyModal);
+        difficultyOverlay.addEventListener('click', hideDifficultyModal);
+        
+        // Show difficulty modal when memory game card is clicked
+        if (memoryGameCard) {
+            memoryGameCard.addEventListener('click', showDifficultyModal);
+        }
+        
         const checkinPopup = document.getElementById('checkinPopup');
         const checkinOverlay = document.getElementById('checkinOverlay');
         const closeCheckinPopup = document.getElementById('closeCheckinPopup');
@@ -123,10 +438,8 @@
         if (memoryGameCard) {
             memoryGameCard.addEventListener('click', (e) => {
                 e.preventDefault();
-                // The memory game will be initialized when the script loads
-                // and will be shown when the container is added to the DOM
-                const memoryGameEvent = new Event('DOMContentLoaded');
-                document.dispatchEvent(memoryGameEvent);
+                // Show the mobile-friendly modal for all devices
+                showDifficultyModal();
             });
         }
 

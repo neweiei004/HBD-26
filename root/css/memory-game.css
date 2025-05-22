@@ -1,0 +1,367 @@
+/* Memory Game CSS - Responsive for all devices */
+
+/* Game Container */
+#memory-game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    flex-direction: column;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* Game Board */
+#memory-game {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 15px;
+    max-width: 450px;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Game Header */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    color: white;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Game Cards */
+.memory-card {
+    aspect-ratio: 1;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    cursor: pointer;
+    border-radius: 10px;
+    -webkit-tap-highlight-color: transparent;
+    width: 100%;
+    max-width: 90px;
+    margin: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    justify-self: center;
+}
+
+.memory-card.flip {
+    transform: rotateY(180deg);
+}
+
+/* Card Faces */
+.front-face, .back-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.front-face {
+    background: linear-gradient(45deg, #6b5b95, #8e7cc3);
+    font-size: 2rem;
+    color: white;
+    transform: rotateY(0deg);
+}
+
+.back-face {
+    background: white;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotateY(180deg);
+}
+
+/* Game Info */
+#moves, #timer {
+    font-size: 1.1rem;
+}
+
+/* Close Button */
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 36px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.close-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Difficulty Modal */
+.difficulty-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 2000;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.difficulty-modal.show {
+    display: block;
+}
+
+.modal-header h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-subtitle {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+.difficulty-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0 1.5rem;
+}
+
+.difficulty-btn {
+    position: relative;
+    padding: 1.2rem 1.5rem;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: white;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.difficulty-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.difficulty-btn:hover::before {
+    opacity: 1;
+}
+
+.difficulty-btn:active {
+    transform: scale(0.98);
+}
+
+.difficulty-btn.easy {
+    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+}
+
+.difficulty-btn.normal {
+    background: linear-gradient(135deg, #fb8c00 0%, #ef6c00 100%);
+}
+
+.difficulty-btn.hard {
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+}
+
+.difficulty-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.difficulty-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.difficulty-desc {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.difficulty-info {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1999;
+}
+
+.popup-overlay.show {
+    display: block;
+}
+
+/* Responsive Design */
+@media (min-width: 1024px) {
+    /* Desktop styles */
+    #memory-game {
+        gap: 12px;
+        max-width: 420px;
+    }
+    
+    .memory-card {
+        max-width: 85px;
+    }
+    
+    .front-face {
+        font-size: 1.6rem;
+    }
+    
+    .back-face {
+        background-size: 65%;
+    }
+    
+    .difficulty-modal {
+        max-width: 450px;
+        padding: 2.5rem 2rem;
+    }
+    
+    .difficulty-options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .difficulty-btn {
+        width: calc(33.33% - 1rem);
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Tablet styles */
+    #memory-game {
+        gap: 8px;
+        padding: 10px;
+        max-width: 380px;
+    }
+    
+    .memory-card {
+        width: 100%;
+        max-width: 80px;
+        margin: 0;
+    }
+    
+    .front-face {
+        font-size: 1.5rem;
+    }
+    
+    #moves, #timer {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Mobile styles */
+    #memory-game {
+        gap: 6px;
+        padding: 8px;
+        max-width: 320px;
+    }
+    
+    .memory-card {
+        width: 100%;
+        max-width: 65px;
+        margin: 0;
+    }
+    
+    .front-face {
+        font-size: 1.3rem;
+    }
+    
+    #moves, #timer {
+        font-size: 0.85rem;
+    }
+    
+    .difficulty-modal {
+        width: 90%;
+        padding: 1.8rem 1.2rem;
+        border-radius: 15px;
+    }
+    
+    .difficulty-btn {
+        padding: 1rem 1.2rem;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.5rem;
+    }
+}
